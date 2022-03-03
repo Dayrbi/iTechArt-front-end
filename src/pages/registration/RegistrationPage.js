@@ -8,7 +8,7 @@ import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
 import Cookies from 'js-cookie';
 import api from '../../services/api.servises';
-import CinemaSecondImg from '../../assets/img/chuttersnap-TgQHWBDA3mM-unsplash_edited.png';
+import RegistrImg from '../../assets/img/chuttersnap-TgQHWBDA3mM-unsplash_edited.png';
 import useStyles from './registrationStyle';
 import { registerUser } from '../../redux/actions/user';
 
@@ -137,7 +137,7 @@ export default function RegistrationPage() {
           </div>
         </div>
         <div className={classes.containerBackGroundImg}>
-          <img src={CinemaSecondImg} alt="img is not availible" className={classes.cinemaSecondImg} />
+          <img src={RegistrImg} alt="img is not availible" className={classes.RegistrImg} />
         </div>
       </div>
     </div>

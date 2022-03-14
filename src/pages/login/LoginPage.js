@@ -1,3 +1,4 @@
+/* eslint-disable react/function-component-definition */
 import React, { useState } from 'react';
 import {
   Button, TextField, Alert, Snackbar,
@@ -6,11 +7,10 @@ import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
-import Cookies from 'js-cookie';
-import api from '../../services/api.servises';
+import PropTypes from 'prop-types';
 import { loginUser } from '../../redux/actions/user';
 import useStyles from './loginStyles';
-import CinemaImg from '../../assets/img/myke-simon-atsUqIm3wxo-unsplash_edited 2.png';
+import CinemaImg from '../../assets/img/Cinema2.png';
 
 const validationSchema = yup.object({
   email: yup
@@ -22,7 +22,7 @@ const validationSchema = yup.object({
     .min(8, 'Password should be of min 8 characters '),
 });
 
-export default function LoginPage() {
+export const LoginPage = () => {
   const classes = useStyles();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -30,13 +30,8 @@ export default function LoginPage() {
   const authUser = async (formValue) => {
     try {
       const { email, password } = formValue;
-      const responce = await api.post('/login', { email, password });
-      if (responce.data) {
-        const { token } = responce.data;
-        dispatch(loginUser(token));
-        Cookies.set('token', token);
-        navigate('/');
-      }
+      await dispatch(loginUser(email, password));
+      navigate('/');
     } catch (e) {
       setIsError(true);
     }
@@ -63,7 +58,7 @@ export default function LoginPage() {
       </Snackbar>
       <div className={classes.container}>
         <div className={classes.containerBackGroundImg}>
-          <img src={CinemaImg} alt="img is not availible" className={classes.cinemaImg} />
+          <img src={CinemaImg} alt="Cinema img" className={classes.cinemaImg} />
         </div>
         <div className={classes.containerContent}>
           <div className={classes.containerContentForm}>
@@ -106,4 +101,7 @@ export default function LoginPage() {
       </div>
     </div>
   );
-}
+};
+LoginPage.propTypes = {
+  loginUser: PropTypes.func,
+};

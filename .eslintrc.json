@@ -20,6 +20,9 @@
     "rules": {
         "import/prefer-default-export": "off",
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-        "no-param-reassign": 0
+        "no-param-reassign": 0,
+        "react/function-component-definition": "off",
+        "react/require-default-props": "off",
+        "react/no-unused-prop-types": "off"
     }
 }

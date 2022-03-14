@@ -1,9 +1,10 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { API_URL } from '../constants/constants';
 
-const API_URL = 'http://localhost:8080/api';
+const url = API_URL;
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: url,
 });
 api.interceptors.request.use((config) => {
   config.headers.Authorization = `Bearer ${Cookies.get('userToken')}`;

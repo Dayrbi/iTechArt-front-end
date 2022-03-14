@@ -3,6 +3,5 @@ import { usersReducer } from './reducers/user';
 
 const rootReducers = combineReducers({
   usersReducer,
-
 });
 export default rootReducers;

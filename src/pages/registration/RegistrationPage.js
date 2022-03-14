@@ -4,13 +4,12 @@ import {
   Button, TextField, Alert, Snackbar,
 } from '@mui/material';
 import { useFormik } from 'formik';
+import PropTypes from 'prop-types';
 import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
-import Cookies from 'js-cookie';
-import api from '../../services/api.servises';
-import RegistrImg from '../../assets/img/chuttersnap-TgQHWBDA3mM-unsplash_edited.png';
-import useStyles from './registrationStyle';
 import { registerUser } from '../../redux/actions/user';
+import RegistrImg from '../../assets/img/Cinema1.png';
+import useStyles from './registrationStyle';
 
 const validationSchema = yup.object({
   email: yup
@@ -40,13 +39,8 @@ export default function RegistrationPage() {
   const createUser = async (data) => {
     try {
       const { username, email, password } = data;
-      const responce = await api.post('/register', { username, email, password });
-      if (responce.data) {
-        const { token } = responce.data;
-        dispatch(registerUser(token));
-        Cookies.set('token', token);
-        navigate('/');
-      }
+      await dispatch(registerUser(username, email, password));
+      navigate('/');
     } catch (e) {
       setIsNotReg(true);
     }
@@ -137,9 +131,12 @@ export default function RegistrationPage() {
           </div>
         </div>
         <div className={classes.containerBackGroundImg}>
-          <img src={RegistrImg} alt="img is not availible" className={classes.RegistrImg} />
+          <img src={RegistrImg} alt="Registartion img" className={classes.RegistrImg} />
         </div>
       </div>
     </div>
   );
 }
+RegistrationPage.propTypes = {
+  registerUser: PropTypes.func,
+};

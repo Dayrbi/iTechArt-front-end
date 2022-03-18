@@ -4,7 +4,7 @@ import {
   Button, TextField, Alert, Snackbar,
 } from '@mui/material';
 import { useFormik } from 'formik';
-import PropTypes from 'prop-types';
+import { func } from 'prop-types';
 import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '../../redux/actions/user';
@@ -138,5 +138,5 @@ export default function RegistrationPage() {
   );
 }
 RegistrationPage.propTypes = {
-  registerUser: PropTypes.func,
+  registerUser: func,
 };

@@ -4,7 +4,7 @@ import { CREATE_USER, LOGIN_USER } from './types';
 
 export function registerUser(username, email, password) {
   return async function registerUserThunk(dispatch) {
-    const responce = await api.post('/register', { username, email, password });
+    const responce = await api.post('/auth/register', { username, email, password });
     if (!responce.data) {
       throw new Error();
     }
@@ -15,7 +15,7 @@ export function registerUser(username, email, password) {
 }
 export function loginUser(email, password) {
   return async function loginUserThunk(dispatch) {
-    const responce = await api.post('/login', { email, password });
+    const responce = await api.post('/auth/login', { email, password });
     if (!responce.data) {
       throw new Error();
     }

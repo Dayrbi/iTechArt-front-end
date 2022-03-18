@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
-import PropTypes from 'prop-types';
+import { func } from 'prop-types';
 import { loginUser } from '../../redux/actions/user';
 import useStyles from './loginStyles';
 import CinemaImg from '../../assets/img/Cinema2.png';
@@ -103,5 +103,5 @@ export const LoginPage = () => {
   );
 };
 LoginPage.propTypes = {
-  loginUser: PropTypes.func,
+  loginUser: func,
 };

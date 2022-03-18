@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import api from '../../services/api.servises';
+import { api } from '../../services/api.servises';
 import { CREATE_USER, LOGIN_USER } from './types';
 
 export function registerUser(username, email, password) {

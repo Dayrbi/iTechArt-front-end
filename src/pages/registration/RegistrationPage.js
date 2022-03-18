@@ -9,7 +9,7 @@ import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '../../redux/actions/user';
 import RegistrImg from '../../assets/img/Cinema1.png';
-import useStyles from './registrationStyle';
+import { useStyles } from './registrationStyle';
 
 const validationSchema = yup.object({
   email: yup

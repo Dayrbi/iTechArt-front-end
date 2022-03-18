@@ -9,7 +9,7 @@ import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { func } from 'prop-types';
 import { loginUser } from '../../redux/actions/user';
-import useStyles from './loginStyles';
+import { useStyles } from './loginStyles';
 import CinemaImg from '../../assets/img/Cinema2.png';
 
 const validationSchema = yup.object({

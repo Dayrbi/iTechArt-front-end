@@ -1,17 +1,19 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import UseRoute from './routes/routes';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { Routing } from './routes/routes';
 
-function App() {
-  const routes = UseRoute();
+const theme = createTheme();
+export function App() {
+  const routes = Routing();
   return (
     <Router>
-      <div className="App">
-        {routes}
-      </div>
+      <ThemeProvider theme={theme}>
+        <div className="App">
+          {routes}
+        </div>
+      </ThemeProvider>
     </Router>
 
   );
 }
-
-export default App;

@@ -1,10 +1,11 @@
 import { makeStyles } from '@mui/styles';
+import { PURPLE_BACKGROUND, WHITE_COLOR } from '../../constants/constantsStyle';
 
 export const useStyles = makeStyles({
   main: {
     width: '100%',
     height: '100vh',
-    backgroundColor: '#8561c5',
+    backgroundColor: PURPLE_BACKGROUND,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -18,7 +19,7 @@ export const useStyles = makeStyles({
     width: '60%',
     height: '100%',
   },
-  cinemaSecondImg: {
+  RegistrImg: {
     width: '100%',
     height: '100%',
   },
@@ -28,7 +29,7 @@ export const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: WHITE_COLOR,
   },
   containerContentForm: {
     width: '100%',

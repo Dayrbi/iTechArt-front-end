@@ -1,10 +1,11 @@
 import { makeStyles } from '@mui/styles';
+import { WHITE_COLOR, PURPLE_BACKGROUND } from '../../constants/constantsStyle';
 
 export const useStyles = makeStyles({
   main: {
     width: '100%',
     height: '100vh',
-    backgroundColor: '#8561c5',
+    backgroundColor: PURPLE_BACKGROUND,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -28,7 +29,7 @@ export const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: WHITE_COLOR,
   },
   containerContentForm: {
     width: '100%',

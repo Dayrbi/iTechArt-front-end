@@ -4,9 +4,10 @@ import {
   Button, TextField, Alert, Snackbar,
 } from '@mui/material';
 import { useFormik } from 'formik';
-import { func } from 'prop-types';
+import { func, string } from 'prop-types';
 import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
+import { BUTTON_COLOR } from '../../constants/constantsStyle';
 import { registerUser } from '../../redux/actions/user';
 import RegistrImg from '../../assets/img/Cinema1.png';
 import { useStyles } from './registrationStyle';
@@ -122,7 +123,14 @@ export default function RegistrationPage() {
                 error={formik.touched.passwordConfirm && Boolean(formik.errors.passwordConfirm)}
                 helperText={formik.touched.passwordConfirm && formik.errors.passwordConfirm}
               />
-              <Button variant="contained" style={{ backgroundColor: '#3F3DC9', marginTop: '10%' }} className={classes.formButtom} type="submit">Sign Up</Button>
+              <Button
+                variant="contained"
+                sx={{ backgroundColor: BUTTON_COLOR, mt: '10%' }}
+                className={classes.formButtom}
+                type="submit"
+              >
+                Sign Up
+              </Button>
             </form>
             <div className={classes.signUpContainer}>
               <span>Already have an account?</span>
@@ -139,4 +147,5 @@ export default function RegistrationPage() {
 }
 RegistrationPage.propTypes = {
   registerUser: func,
+  BUTTON_COLOR: string,
 };

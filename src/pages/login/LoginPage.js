@@ -6,11 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
-import { func, string } from 'prop-types';
-import { BUTTON_COLOR } from '../../constants/constantsStyle';
-import { loginUser } from '../../redux/actions/user';
+import { loginUser } from 'redux/actions/user';
+import CinemaImg from 'assets/img/Cinema2.png';
 import { useStyles } from './loginStyles';
-import CinemaImg from '../../assets/img/Cinema2.png';
 
 const validationSchema = yup.object({
   email: yup
@@ -91,7 +89,7 @@ export const LoginPage = () => {
                 error={formik.touched.password && Boolean(formik.errors.password)}
                 helperText={formik.touched.password && formik.errors.password}
               />
-              <Button color="error" variant="contained" sx={{ backgroundColor: BUTTON_COLOR, mt: '10%' }} className={classes.formButtom} type="submit">Log In</Button>
+              <Button variant="contained" sx={{ backgroundColor: 'button.purple', mt: '10%' }} className={classes.formButtom} type="submit">Log In</Button>
             </form>
             <div className={classes.signUpContainer}>
               <span>Don’t have an account?</span>
@@ -102,8 +100,4 @@ export const LoginPage = () => {
       </div>
     </div>
   );
-};
-LoginPage.propTypes = {
-  loginUser: func,
-  BUTTON_COLOR: string,
 };

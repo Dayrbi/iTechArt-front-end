@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { ThemeProvider, createTheme, StyledEngineProvider } from '@mui/material/styles';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { Routing } from './routes/routes';
+import { theme } from './theme';
 
-const theme = createTheme();
 export function App() {
   const routes = Routing();
   return (

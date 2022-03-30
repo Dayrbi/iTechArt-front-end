@@ -1,11 +1,11 @@
 import { makeStyles } from '@mui/styles';
-import { ARROW_IMG_URL } from '../../../../constants/constants';
+import CustomArrow from 'assets/img/Arrow.png';
 
 export const useStyles = makeStyles(() => ({
   slickArrow: {
     display: 'block',
     position: 'absolute',
-    backgroundImage: `url(${ARROW_IMG_URL})`,
+    backgroundImage: `url(${CustomArrow})`,
     width: '48px',
     height: '48px',
     backgroundColor: 'white',

@@ -2,9 +2,8 @@ import React from 'react';
 import { string, func, object } from 'prop-types';
 import { useStyles } from './customArrowStyle';
 
-export const CustomArrowLeft = (props) => {
+export const CustomArrowLeft = ({ style, onClick }) => {
   const classes = useStyles();
-  const { style, onClick } = props;
   return (
     <div
       className={classes.slickArrow}
@@ -18,9 +17,8 @@ export const CustomArrowLeft = (props) => {
     />
   );
 };
-export const CustomArrowRight = (props) => {
+export const CustomArrowRight = ({ style, onClick }) => {
   const classes = useStyles();
-  const { style, onClick } = props;
   return (
     <div
       className={classes.slickArrow}

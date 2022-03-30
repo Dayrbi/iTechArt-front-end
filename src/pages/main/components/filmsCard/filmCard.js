@@ -3,7 +3,6 @@ import { string, number } from 'prop-types';
 import {
   Typography, Card, CardActionArea, CardMedia, CardContent,
 } from '@mui/material';
-import { BACKGROUND_COLOR } from '../../../../constants/constantsStyle';
 
 export const FilmCard = ({ id, img, title }) => (
   <Card
@@ -20,7 +19,7 @@ export const FilmCard = ({ id, img, title }) => (
         image={img}
         alt={`${title} Image`}
       />
-      <CardContent sx={{ backgroundColor: BACKGROUND_COLOR }}>
+      <CardContent sx={{ backgroundColor: 'background.main' }}>
         <Typography
           gutterBottom
           variant="h6"

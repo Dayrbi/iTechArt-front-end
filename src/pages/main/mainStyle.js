@@ -1,18 +1,15 @@
 import { makeStyles } from '@mui/styles';
-import {
-  BUTTON_COLOR, HEADER_COLOR, BACKGROUND_COLOR, WHITE_COLOR,
-} from '../../constants/constantsStyle';
 
 export const useStyles = makeStyles((theme) => ({
   mainContainer: {
     width: '100%',
     height: '100%',
-    backgroundColor: BACKGROUND_COLOR,
+    backgroundColor: theme.palette.background.main,
   },
   appBar: {
     height: '80px',
     width: '100%',
-    backgroundColor: HEADER_COLOR,
+    backgroundColor: theme.palette.background.header,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -28,16 +25,16 @@ export const useStyles = makeStyles((theme) => ({
   },
   searchInput: {
     width: '50%',
-    backgroundColor: '#737E8D',
+    backgroundColor: theme.palette.input.gray,
     borderRadius: '8px',
     marginRight: theme.spacing(3),
-    color: WHITE_COLOR,
+    color: theme.palette.common.white,
   },
   searchTitle: {
     fontFamily: 'Lato',
     fontWeight: 600,
     fontSize: '22px',
-    color: WHITE_COLOR,
+    color: theme.palette.common.white,
   },
   butContainer: {
     width: '25%',
@@ -47,10 +44,10 @@ export const useStyles = makeStyles((theme) => ({
   },
   logBut: {
     marginRight: theme.spacing(3),
-    color: WHITE_COLOR,
+    color: theme.palette.common.white,
   },
   signBut: {
-    backgroundColor: BUTTON_COLOR,
+    backgroundColor: theme.palette.button.purple,
   },
   mainTitle: {
     fontSize: '38px',
@@ -69,7 +66,7 @@ export const useStyles = makeStyles((theme) => ({
   },
   navBAr: {
     width: '65%',
-    borderColor: 'gray',
+    borderColor: theme.palette.grey.main,
     borderTop: '1px solid',
     borderBottom: '1px solid',
   },
@@ -81,7 +78,6 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'flex-start',
     width: '60%',
-    backgroundColor: '#red',
   },
   filterBox: {
     display: 'flex',
@@ -91,8 +87,8 @@ export const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(3),
   },
   SelectInput: {
-    backgroundColor: WHITE_COLOR,
-    boxShadow: '0px 1px 3px 0px rgb(0 0 0 / 30%)',
+    backgroundColor: theme.palette.common.white,
+    boxShadow: theme.palette.shadows.container,
   },
   sliderSection: {
     display: 'flex',
@@ -111,13 +107,13 @@ export const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     width: '65%',
     borderRadius: '10px',
-    backgroundColor: WHITE_COLOR,
-    boxShadow: '0px 1px 3px 0px rgb(0 0 0 / 30%)',
+    backgroundColor: theme.palette.common.white,
+    boxShadow: theme.palette.shadows.container,
   },
   footerContainer: {
     width: '100%',
     height: '59px',
-    backgroundColor: WHITE_COLOR,
+    backgroundColor: theme.palette.common.white,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -128,6 +124,6 @@ export const useStyles = makeStyles((theme) => ({
     fontWeight: 400,
     fontSize: '16px',
     lineHeight: '19px',
-    color: '#676767',
+    color: theme.palette.background.white,
   },
 }));

@@ -4,12 +4,10 @@ import {
   Button, TextField, Alert, Snackbar,
 } from '@mui/material';
 import { useFormik } from 'formik';
-import { func, string } from 'prop-types';
 import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
-import { BUTTON_COLOR } from '../../constants/constantsStyle';
-import { registerUser } from '../../redux/actions/user';
-import RegistrImg from '../../assets/img/Cinema1.png';
+import { registerUser } from 'redux/actions/user';
+import RegistrImg from 'assets/img/Cinema1.png';
 import { useStyles } from './registrationStyle';
 
 const validationSchema = yup.object({
@@ -125,7 +123,7 @@ export default function RegistrationPage() {
               />
               <Button
                 variant="contained"
-                sx={{ backgroundColor: BUTTON_COLOR, mt: '10%' }}
+                sx={{ backgroundColor: 'button.purple', mt: '10%' }}
                 className={classes.formButtom}
                 type="submit"
               >
@@ -145,7 +143,3 @@ export default function RegistrationPage() {
     </div>
   );
 }
-RegistrationPage.propTypes = {
-  registerUser: func,
-  BUTTON_COLOR: string,
-};

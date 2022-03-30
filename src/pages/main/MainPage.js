@@ -8,9 +8,9 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { useDispatch, useSelector } from 'react-redux';
 import { func, element } from 'prop-types';
 import Slider from 'react-slick';
+import { getPopularFilm } from 'redux/actions/films';
 import { FilmCard } from './components/filmsCard/filmCard';
 import { CinemaCard } from './components/cinemaCard/cinemaCard';
-import { getPopulFilm } from '../../redux/actions/films';
 import { CustomArrowRight, CustomArrowLeft } from './components/customArrow/customArrow';
 import { useStyles } from './mainStyle';
 import './sliderStyle.css';
@@ -87,7 +87,7 @@ export const MainPage = () => {
   };
   async function getFilms() {
     try {
-      await dispatch(getPopulFilm());
+      await dispatch(getPopularFilm());
     } catch (e) {
       setErrorFilm(true);
     }
@@ -217,7 +217,7 @@ export const MainPage = () => {
         </div>
       </section>
       <footer className={classes.footerContainer}>
-        <p className={classes.footerTitle}>Designed by Mihalap Oleg, 2019</p>
+        <p className={classes.footerTitle}>CinemaBuy</p>
       </footer>
     </div>
   );

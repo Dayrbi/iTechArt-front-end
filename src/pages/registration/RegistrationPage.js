@@ -24,6 +24,7 @@ const validationSchema = yup.object({
     .required('Password is required'),
   passwordConfirm: yup
     .string('Confirm your password')
+    .required('Password is required')
     .oneOf([yup.ref('password')], 'Password does not match'),
   username: yup
     .string('Enter your username')

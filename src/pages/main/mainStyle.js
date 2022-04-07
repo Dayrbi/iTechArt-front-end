@@ -42,11 +42,11 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
-  logBut: {
+  logButton: {
     marginRight: theme.spacing(3),
     color: theme.palette.common.white,
   },
-  signBut: {
+  signButton: {
     backgroundColor: theme.palette.button.purple,
   },
   mainTitle: {
@@ -64,7 +64,7 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'flex-start',
   },
-  navBAr: {
+  navBar: {
     width: '65%',
     borderColor: theme.palette.grey.main,
     borderTop: '1px solid',
@@ -86,7 +86,7 @@ export const useStyles = makeStyles((theme) => ({
     flexBasis: 1,
     marginRight: theme.spacing(3),
   },
-  SelectInput: {
+  selectInput: {
     backgroundColor: theme.palette.common.white,
     boxShadow: theme.palette.shadows.container,
   },

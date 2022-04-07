@@ -8,7 +8,7 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { useDispatch, useSelector } from 'react-redux';
 import { func, element } from 'prop-types';
 import Slider from 'react-slick';
-import { getPopularFilm } from 'redux/actions/films';
+import { getPopularFilms } from 'redux/actions/films';
 import { FilmCard } from './components/filmsCard/filmCard';
 import { CinemaCard } from './components/cinemaCard/cinemaCard';
 import { CustomArrowRight, CustomArrowLeft } from './components/customArrow/customArrow';
@@ -87,7 +87,7 @@ export const MainPage = () => {
   };
   async function getFilms() {
     try {
-      await dispatch(getPopularFilm());
+      await dispatch(getPopularFilms());
     } catch (e) {
       setErrorFilm(true);
     }
@@ -105,15 +105,15 @@ export const MainPage = () => {
           />
         </div>
         <div className={classes.butContainer}>
-          <Button className={classes.logBut} variant="text">Log In</Button>
-          <Button className={classes.signBut} variant="contained">Sign Up</Button>
+          <Button className={classes.logButton} variant="text">Log In</Button>
+          <Button className={classes.signButton} variant="contained">Sign Up</Button>
         </div>
       </header>
       <section className={classes.navSection}>
         <div className={classes.movieTitleContainer}>
           <h1 className={classes.mainTitle}>Movies</h1>
         </div>
-        <nav className={classes.navBAr}>
+        <nav className={classes.navBar}>
           <Link
             className={classes.LinkButton}
             component="button"
@@ -152,7 +152,7 @@ export const MainPage = () => {
             <div className={classes.filterBox}>
               <h3>City</h3>
               <Select
-                className={classes.SelectInput}
+                className={classes.selectInput}
                 value={filterOptions.city}
                 name="city"
                 onChange={handleChange}
@@ -161,7 +161,7 @@ export const MainPage = () => {
             <div className={classes.filterBox}>
               <h3>Theatre</h3>
               <Select
-                className={classes.SelectInput}
+                className={classes.selectInput}
                 value={filterOptions.theatre}
                 name="theatre"
                 onChange={handleChange}
@@ -170,7 +170,7 @@ export const MainPage = () => {
             <div className={classes.filterBox}>
               <h3>Seats</h3>
               <Select
-                className={classes.SelectInput}
+                className={classes.selectInput}
                 value={filterOptions.seats}
                 name="seats"
                 onChange={handleChange}
@@ -181,7 +181,7 @@ export const MainPage = () => {
               <h3>Date and time</h3>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DesktopDateTimePicker
-                  className={classes.SelectInput}
+                  className={classes.selectInput}
                   value={filterOptions.date}
                   onChange={(newValue) => {
                     handleChange(newValue);

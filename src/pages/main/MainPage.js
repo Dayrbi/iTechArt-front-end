@@ -6,7 +6,7 @@ import {
 import { LocalizationProvider, DesktopDateTimePicker } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { useDispatch, useSelector } from 'react-redux';
-import { func, element } from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import { getPopularFilms } from 'redux/actions/films';
 import { FilmCard } from './components/filmsCard/filmCard';
@@ -65,6 +65,7 @@ const settings = {
 
 export const MainPage = () => {
   const classes = useStyles();
+  const navigate = useNavigate();
   const [errorFilm, setErrorFilm] = useState(false);
   const [filterOptions, setFilterOptions] = useState({
     theatre: '',
@@ -105,8 +106,8 @@ export const MainPage = () => {
           />
         </div>
         <div className={classes.butContainer}>
-          <Button className={classes.logButton} variant="text">Log In</Button>
-          <Button className={classes.signButton} variant="contained">Sign Up</Button>
+          <Button className={classes.logButton} variant="text" onClick={() => navigate('/login')}>Log In</Button>
+          <Button className={classes.signButton} variant="contained" onClick={() => navigate('/registration')}>Sign Up</Button>
         </div>
       </header>
       <section className={classes.navSection}>
@@ -221,10 +222,4 @@ export const MainPage = () => {
       </footer>
     </div>
   );
-};
-MainPage.propTypes = {
-  getPopulFilm: func,
-  FilmCard: element,
-  CustomArrowLeft: func,
-  CustomArrowRight: func,
 };

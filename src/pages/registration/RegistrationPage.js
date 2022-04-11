@@ -4,11 +4,10 @@ import {
   Button, TextField, Alert, Snackbar,
 } from '@mui/material';
 import { useFormik } from 'formik';
-import { func } from 'prop-types';
 import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
-import { registerUser } from '../../redux/actions/user';
-import RegistrImg from '../../assets/img/Cinema1.png';
+import { registerUser } from 'redux/actions/user';
+import RegistrImg from 'assets/img/Cinema1.png';
 import { useStyles } from './registrationStyle';
 
 const validationSchema = yup.object({
@@ -25,6 +24,7 @@ const validationSchema = yup.object({
     .required('Password is required'),
   passwordConfirm: yup
     .string('Confirm your password')
+    .required('Password is required')
     .oneOf([yup.ref('password')], 'Password does not match'),
   username: yup
     .string('Enter your username')
@@ -122,7 +122,14 @@ export default function RegistrationPage() {
                 error={formik.touched.passwordConfirm && Boolean(formik.errors.passwordConfirm)}
                 helperText={formik.touched.passwordConfirm && formik.errors.passwordConfirm}
               />
-              <Button variant="contained" style={{ backgroundColor: '#3F3DC9', marginTop: '10%' }} className={classes.formButtom} type="submit">Sign Up</Button>
+              <Button
+                variant="contained"
+                sx={{ backgroundColor: 'button.purple', mt: '10%' }}
+                className={classes.formButtom}
+                type="submit"
+              >
+                Sign Up
+              </Button>
             </form>
             <div className={classes.signUpContainer}>
               <span>Already have an account?</span>
@@ -137,6 +144,3 @@ export default function RegistrationPage() {
     </div>
   );
 }
-RegistrationPage.propTypes = {
-  registerUser: func,
-};

@@ -1,10 +1,10 @@
 import { makeStyles } from '@mui/styles';
 
-export const useStyles = makeStyles({
+export const useStyles = makeStyles((theme) => ({
   main: {
     width: '100%',
     height: '100vh',
-    backgroundColor: '#8561c5',
+    backgroundColor: theme.palette.background.purple,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -18,7 +18,7 @@ export const useStyles = makeStyles({
     width: '60%',
     height: '100%',
   },
-  cinemaSecondImg: {
+  RegistrImg: {
     width: '100%',
     height: '100%',
   },
@@ -28,7 +28,7 @@ export const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: theme.palette.common.white,
   },
   containerContentForm: {
     width: '100%',
@@ -73,4 +73,4 @@ export const useStyles = makeStyles({
     marginRight: '10%',
   },
 
-});
+}));

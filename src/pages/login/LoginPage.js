@@ -1,4 +1,3 @@
-/* eslint-disable react/function-component-definition */
 import React, { useState } from 'react';
 import {
   Button, TextField, Alert, Snackbar,
@@ -7,10 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
-import { func } from 'prop-types';
-import { loginUser } from '../../redux/actions/user';
+import { loginUser } from 'redux/actions/user';
+import CinemaImg from 'assets/img/Cinema2.png';
 import { useStyles } from './loginStyles';
-import CinemaImg from '../../assets/img/Cinema2.png';
 
 const validationSchema = yup.object({
   email: yup
@@ -19,7 +17,8 @@ const validationSchema = yup.object({
     .required('Email is required'),
   password: yup
     .string('Enter your password')
-    .min(8, 'Password should be of min 8 characters '),
+    .min(8, 'Password should be of min 8 characters ')
+    .required('Password is required'),
 });
 
 export const LoginPage = () => {
@@ -90,7 +89,7 @@ export const LoginPage = () => {
                 error={formik.touched.password && Boolean(formik.errors.password)}
                 helperText={formik.touched.password && formik.errors.password}
               />
-              <Button color="error" variant="contained" style={{ backgroundColor: '#3F3DC9', marginTop: '10%' }} className={classes.formButtom} type="submit">Log In</Button>
+              <Button variant="contained" sx={{ backgroundColor: 'button.purple', mt: '10%' }} className={classes.formButtom} type="submit">Log In</Button>
             </form>
             <div className={classes.signUpContainer}>
               <span>Don’t have an account?</span>
@@ -101,7 +100,4 @@ export const LoginPage = () => {
       </div>
     </div>
   );
-};
-LoginPage.propTypes = {
-  loginUser: func,
 };

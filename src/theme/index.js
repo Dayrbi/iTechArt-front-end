@@ -17,8 +17,25 @@ export const theme = createTheme({
     grey: {
       main: '#424242',
     },
-    shadows: {
-      container: '0px 1px 3px 0px rgb(0 0 0 / 30%)',
+  },
+  typography: {
+    fontFamily: ['Lato'].join(','),
+    fontWeightMedium: 600,
+    h2: {
+      fontWeight: 600,
+      fontSize: '40px',
+      fontStyle: 'normal',
     },
+    body3: {
+      fontFamily: ['Montserrat'].join(','),
+      fontWeight: 400,
+      fontStyle: 'normal',
+      fontSize: '20px',
+      lineHeight: 1.43,
+      letterSpacing: '0.01071em',
+    },
+  },
+  shadows: {
+    1: '0px 1px 3px 0px rgb(0 0 0 / 30%)',
   },
 });

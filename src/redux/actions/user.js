@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 import { api } from 'services/api.servises';
-import { CREATE_USER, LOGIN_USER } from './types';
+import { AUTH_USER, CREATE_USER, LOGIN_USER } from './types';
 
 export function registerUser(username, email, password) {
   return async function registerUserThunk(dispatch) {
@@ -22,5 +22,14 @@ export function loginUser(email, password) {
     const { token } = responce.data;
     Cookies.set('token', token);
     dispatch({ type: LOGIN_USER, payload: token });
+  };
+}
+export function authUser() {
+  return async function authUserThunk(dispatch) {
+    const responce = await api.get('/auth/login');
+    if (!responce.data) {
+      throw new Error();
+    }
+    dispatch({ type: AUTH_USER, payload: responce.data });
   };
 }

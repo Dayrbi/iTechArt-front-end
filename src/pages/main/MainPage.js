@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Autocomplete, TextField, Button, Link,
-  Select,
+  TextField, Link, Select, Box,
 } from '@mui/material';
 import { LocalizationProvider, DesktopDateTimePicker } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -9,6 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import { getPopularFilms } from 'redux/actions/films';
+import { getAllCinemas } from 'redux/actions/cinemas';
+import moment from 'moment';
 import { FilmCard } from './components/filmsCard/filmCard';
 import { CinemaCard } from './components/cinemaCard/cinemaCard';
 import { CustomArrowRight, CustomArrowLeft } from './components/customArrow/customArrow';
@@ -57,6 +58,7 @@ const settings = {
         slidesToShow: 1,
         slidesToScroll: 1,
         dots: false,
+        arrow: false,
         centerMode: true,
       },
     },
@@ -67,6 +69,7 @@ export const MainPage = () => {
   const classes = useStyles();
   const navigate = useNavigate();
   const [errorFilm, setErrorFilm] = useState(false);
+  const [errorCinema, setErrorCinema] = useState(false);
   const [filterOptions, setFilterOptions] = useState({
     theatre: '',
     city: '',
@@ -76,8 +79,13 @@ export const MainPage = () => {
   useEffect(() => {
     getFilms();
   }, []);
+  useEffect(() => {
+    getCinemas();
+  }, []);
   const dispatch = useDispatch();
   const filmsArr = useSelector((state) => state.filmsReducer.films.popular);
+  const cinemasArr = useSelector((state) => state.cinemasReducer.cinemas.allCinemas);
+  const [dateArr] = cinemasArr;
   const handleChange = (event) => {
     if (!event.target) {
       setFilterOptions((prevState) => ({ ...prevState, date: event }));
@@ -93,23 +101,20 @@ export const MainPage = () => {
       setErrorFilm(true);
     }
   }
+  async function getCinemas() {
+    try {
+      await dispatch(getAllCinemas());
+    } catch (e) {
+      setErrorCinema(true);
+    }
+  }
+  const handleFilmClick = (id) => {
+    if (id) {
+      navigate(`/filmDescription/${id}`);
+    }
+  };
   return (
     <div className={classes.mainContainer}>
-      <header className={classes.appBar}>
-        <div className={classes.searchContainer}>
-          <span className={classes.searchTitle}>CinemaBuy</span>
-          <Autocomplete
-            className={classes.searchInput}
-            freeSolo
-            options={filmsArr.map((options) => options.title)}
-            renderInput={(params) => <TextField {...params} placeholder="Search..." />}
-          />
-        </div>
-        <div className={classes.butContainer}>
-          <Button className={classes.logButton} variant="text" onClick={() => navigate('/login')}>Log In</Button>
-          <Button className={classes.signButton} variant="contained" onClick={() => navigate('/registration')}>Sign Up</Button>
-        </div>
-      </header>
       <section className={classes.navSection}>
         <div className={classes.movieTitleContainer}>
           <h1 className={classes.mainTitle}>Movies</h1>
@@ -201,7 +206,13 @@ export const MainPage = () => {
           <Slider {...settings}>
             {
               !errorFilm && filmsArr.map((film) => (
-                <FilmCard img={film.img} id={film.id} title={film.title} key={film.id} />
+                <FilmCard
+                  handleFilmClick={handleFilmClick}
+                  img={film.img}
+                  id={film.id}
+                  title={film.title}
+                  key={film.id}
+                />
               ))
             }
           </Slider>
@@ -211,15 +222,26 @@ export const MainPage = () => {
         <div className={classes.movieTitleContainer}>
           <h1 className={classes.mainTitle}>Cinemas</h1>
         </div>
-        <div className={classes.cinemaContainer}>
-          <CinemaCard title="Belarus" address="Adress,street" />
-          <CinemaCard title="Belarus" address="Adress,street" />
-          <CinemaCard title="Belarus" address="Adress,street" />
-        </div>
+        {
+          dateArr && dateArr.date.map((date) => (
+            <div className={classes.cinemaContainer} key={date}>
+              <Box sx={{ width: '100%', bacgroundColor: 'grey.main' }}>{moment(date).format('dddd, MMMM')}</Box>
+              {
+              !errorCinema && cinemasArr.map((cinema) => (
+                <CinemaCard
+                  handleFilmClick={handleFilmClick}
+                  title={cinema.title}
+                  address={cinema.address}
+                  sessions={cinema.sessions}
+                  key={cinema.title}
+                  date={date}
+                />
+              ))
+            }
+            </div>
+          ))
+        }
       </section>
-      <footer className={classes.footerContainer}>
-        <p className={classes.footerTitle}>CinemaBuy</p>
-      </footer>
     </div>
   );
 };

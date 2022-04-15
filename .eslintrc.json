@@ -30,7 +30,8 @@
         "jsx-a11y/click-events-have-key-events": "off",
         "jsx-a11y/no-static-element-interactions": "off",
         "default-param-last": "off",
-        "no-use-before-define": "off"
+        "no-use-before-define": "off",
+        "no-underscore-dangle":"off"
 
     }
 }

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import {
-  TextField, Link, Select, Box,
+  TextField, Link, Select, Box, Typography, FormControl, MenuItem,
 } from '@mui/material';
-import { LocalizationProvider, DesktopDateTimePicker } from '@mui/lab';
+import { LocalizationProvider, DateTimePicker } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import { getPopularFilms } from 'redux/actions/films';
-import { getAllCinemas } from 'redux/actions/cinemas';
+import { getAllCinemas, getCinemasByFilter } from 'redux/actions/cinemas';
 import moment from 'moment';
 import { FilmCard } from './components/filmsCard/filmCard';
 import { CinemaCard } from './components/cinemaCard/cinemaCard';
@@ -73,8 +73,7 @@ export const MainPage = () => {
   const [filterOptions, setFilterOptions] = useState({
     theatre: '',
     city: '',
-    seats: '',
-    date: new Date('2018-01-01T00:00:00.000Z'),
+    date: moment().format(),
   });
   useEffect(() => {
     getFilms();
@@ -86,13 +85,17 @@ export const MainPage = () => {
   const filmsArr = useSelector((state) => state.filmsReducer.films.popular);
   const cinemasArr = useSelector((state) => state.cinemasReducer.cinemas.allCinemas);
   const [dateArr] = cinemasArr;
+  const cityArr = [...new Set(cinemasArr.map((item) => item.city))];
+  const theatreName = [...new Set(cinemasArr.map((item) => item.title))];
   const handleChange = (event) => {
     if (!event.target) {
       setFilterOptions((prevState) => ({ ...prevState, date: event }));
+      getFilterCinemas();
       return;
     }
     const { name, value } = event.target;
     setFilterOptions((prevState) => ({ ...prevState, [name]: value }));
+    getFilterCinemas();
   };
   async function getFilms() {
     try {
@@ -104,6 +107,13 @@ export const MainPage = () => {
   async function getCinemas() {
     try {
       await dispatch(getAllCinemas());
+    } catch (e) {
+      setErrorCinema(true);
+    }
+  }
+  async function getFilterCinemas() {
+    try {
+      await dispatch(getCinemasByFilter(filterOptions));
     } catch (e) {
       setErrorCinema(true);
     }
@@ -157,36 +167,38 @@ export const MainPage = () => {
           <div className={classes.selectContainer}>
             <div className={classes.filterBox}>
               <h3>City</h3>
-              <Select
-                className={classes.selectInput}
-                value={filterOptions.city}
-                name="city"
-                onChange={handleChange}
-              />
+              <FormControl>
+                <Select
+                  className={classes.selectInput}
+                  value={filterOptions.city}
+                  name="city"
+                  onChange={handleChange}
+                >
+                  {cityArr && cityArr.map((item) => (
+                    <MenuItem value={item} key={item}>{item}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </div>
             <div className={classes.filterBox}>
               <h3>Theatre</h3>
-              <Select
-                className={classes.selectInput}
-                value={filterOptions.theatre}
-                name="theatre"
-                onChange={handleChange}
-              />
-            </div>
-            <div className={classes.filterBox}>
-              <h3>Seats</h3>
-              <Select
-                className={classes.selectInput}
-                value={filterOptions.seats}
-                name="seats"
-                onChange={handleChange}
-                fullWidth
-              />
+              <FormControl>
+                <Select
+                  className={classes.selectInput}
+                  value={filterOptions.theatre}
+                  name="theatre"
+                  onChange={handleChange}
+                >
+                  {theatreName && theatreName.map((item) => (
+                    <MenuItem value={item} key={item}>{item}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </div>
             <div className={classes.filterBox}>
               <h3>Date and time</h3>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DesktopDateTimePicker
+                <DateTimePicker
                   className={classes.selectInput}
                   value={filterOptions.date}
                   onChange={(newValue) => {
@@ -222,11 +234,20 @@ export const MainPage = () => {
         <div className={classes.movieTitleContainer}>
           <h1 className={classes.mainTitle}>Cinemas</h1>
         </div>
-        {
-          dateArr && dateArr.date.map((date) => (
-            <div className={classes.cinemaContainer} key={date}>
-              <Box sx={{ width: '100%', bacgroundColor: 'grey.main' }}>{moment(date).format('dddd, MMMM')}</Box>
-              {
+        <Box sx={{
+          width: '65%', borderRadius: '10px', backgroundColor: 'common.white', boxShadow: '1',
+        }}
+        >
+          {
+               dateArr && dateArr.date.map((date) => (
+                 <div className={classes.cinemaContainer} key={date}>
+                   <Box sx={{
+                     width: '100%', height: '50px', backgroundColor: 'grey.300', alignItems: 'center', display: 'flex', borderRadius: '10px 10px 0 0',
+                   }}
+                   >
+                     <Typography variant="body3" sx={{ fontWeight: 'fontWeightMedium', ml: 2 }}>{moment(date).format('dddd, DD MMMM')}</Typography>
+                   </Box>
+                   {
               !errorCinema && cinemasArr.map((cinema) => (
                 <CinemaCard
                   handleFilmClick={handleFilmClick}
@@ -238,9 +259,10 @@ export const MainPage = () => {
                 />
               ))
             }
-            </div>
-          ))
+                 </div>
+               ))
         }
+        </Box>
       </section>
     </div>
   );

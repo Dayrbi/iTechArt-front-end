@@ -37,7 +37,7 @@ export const useStyles = makeStyles((theme) => ({
   selectContainer: {
     display: 'flex',
     justifyContent: 'flex-start',
-    width: '60%',
+    width: '50%',
   },
   filterBox: {
     display: 'flex',
@@ -65,9 +65,6 @@ export const useStyles = makeStyles((theme) => ({
   cinemaContainer: {
     display: 'flex',
     flexDirection: 'column',
-    width: '65%',
-    borderRadius: '10px',
-    backgroundColor: theme.palette.common.white,
-    boxShadow: theme.shadows[1],
+    width: '100%',
   },
 }));

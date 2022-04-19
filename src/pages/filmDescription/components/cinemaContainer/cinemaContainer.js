@@ -13,9 +13,11 @@ export const CinemaContainer = ({ time, price, cinemas }) => (
   }}
   >
     {cinemas && cinemas.map((cinema) => (
-      <Box sx={{
-        ml: 3, mt: 2, maxWidth: '320px', width: '100%',
-      }}
+      <Box
+        key={cinema.title}
+        sx={{
+          ml: 3, mt: 2, maxWidth: '320px', width: '100%',
+        }}
       >
         <Typography gutterBottom component="div" sx={{ mb: 0, font: '400 24px/29px Lato' }}>
           {cinema.title}
@@ -40,7 +42,7 @@ export const CinemaContainer = ({ time, price, cinemas }) => (
                  display: 'flex', flexDirection: 'column', alignItems: 'center', mr: 2,
                }}
              >
-               <Button variant="contained" sx={{ backgroundColor: 'button.purple' }}>
+               <Button variant="contained" disabled={!moment(filmTime).isValid()} sx={{ backgroundColor: 'button.purple' }}>
                  <Typography variant="button" color="common.white">{moment(filmTime).format('H:mm')}</Typography>
                </Button>
                <Typography align="center" color="text.secondary" variant="caption">{`от ${price} руб`}</Typography>

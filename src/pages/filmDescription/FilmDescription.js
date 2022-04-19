@@ -4,6 +4,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import moment from 'moment';
 import { getCinemasByFilm } from 'redux/actions/cinemas';
 import { getFilmInfo } from 'redux/actions/films';
 import { CinemaContainer } from './components/cinemaContainer/cinemaContainer';
@@ -14,7 +15,7 @@ export const FilmDescription = () => {
   const classes = useStyles();
   const { id } = useParams();
   const dispatch = useDispatch();
-  const filmCinemasArr = useSelector((state) => state.cinemasReducer.cinemas.filmCinemas);
+  const { sessions, date } = useSelector((state) => state.cinemasReducer.cinemas.filmCinemas);
   const [filmData] = useSelector((state) => state.filmsReducer.films.filmInfo);
   const [filmLoadError, setFilLoadError] = useState(false);
   const [errorCinema, setErrorCinema] = useState(false);
@@ -87,19 +88,33 @@ export const FilmDescription = () => {
         <Box sx={{ width: '65%', justifyContent: 'flex-start' }}>
           <Typography variant="h2">Watch in Cinema</Typography>
         </Box>
-        <Box sx={{
-          width: '65%', display: 'flex', flexDirection: 'column', borderRadius: '8px', mt: 2, backgroundColor: 'common.white', boxShadow: '1',
-        }}
+        <Box
+          sx={{
+            width: '65%', display: 'flex', flexDirection: 'column', borderRadius: '8px', mt: 2, backgroundColor: 'common.white', boxShadow: '1',
+          }}
         >
-          {!errorCinema && filmCinemasArr.map((cinema) => (
-            <CinemaContainer
-              time={cinema.time}
-              price={cinema.price}
-              cinemas={cinema.cinemaId}
-              key={cinema._id}
-            />
-          ))}
+          {date && date.map((dateEl) => (
+            <Box key={dateEl}>
+              <Box sx={{
+                width: '100%', height: '50px', backgroundColor: 'grey.300', alignItems: 'center', display: 'flex', borderRadius: '10px 10px 0 0',
+              }}
+              >
+                <Typography variant="body3" sx={{ fontWeight: 'fontWeightMedium', ml: 2 }}>{moment(dateEl).format('dddd, DD MMMM')}</Typography>
+              </Box>
+              {!errorCinema && sessions.map((session) => (
+                moment(session.date).format() === moment(dateEl).format()
+                  ? (
+                    <CinemaContainer
+                      time={session.time}
+                      price={session.price}
+                      cinemas={session.cinemaId}
+                      key={session._id}
+                    />
+                  ) : ''
+              ))}
 
+            </Box>
+          ))}
         </Box>
       </section>
     </div>

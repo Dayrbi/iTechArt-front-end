@@ -7,6 +7,7 @@ export const theme = createTheme({
       header: '#00142F',
       purple: '#8561C5',
       white: '#676767',
+      gray: '#9e9e9e',
     },
     button: {
       purple: '#3F3DC9',
@@ -37,5 +38,6 @@ export const theme = createTheme({
   },
   shadows: {
     1: '0px 1px 3px 0px rgb(0 0 0 / 30%)',
+    8: '0px 1px 3px 0px rgb(0 0 0 / 10%)',
   },
 });

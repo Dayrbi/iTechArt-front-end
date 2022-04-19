@@ -9,24 +9,38 @@ import {
 
 export const CinemaCard = ({
   title, address, sessions, handleFilmClick, date,
-}) => (
-  <Box sx={{
-    boxShadow: 'none', height: 'fit-content', minHeight: '70px', display: 'flex', justifyContent: 'space-between',
-  }}
-  >
+}) => {
+  const isExist = sessions.map((session) => session.date === date);
+  return (
     <Box sx={{
-      ml: 3, mt: 2, maxWidth: '320px', width: '100%',
+      boxShadow: 'none', display: 'flex', justifyContent: 'space-between',
     }}
     >
-      <Typography gutterBottom component="div" sx={{ mb: 0, font: '400 24px/29px Lato' }}>
-        {title}
-      </Typography>
-      <Typography variant="body2" color="text.secondary">
-        {address}
-      </Typography>
-    </Box>
-    <Box variant="contained" sx={{ flex: 1, maxWidth: '700px' }}>
       {
+    isExist.includes(true) ? (
+      <Box>
+        <Box sx={{
+          ml: 3, mt: 2, maxWidth: '320px', width: '100%', height: 'fit-content', minHeight: '70px',
+        }}
+        >
+          <Typography gutterBottom component="div" sx={{ mb: 0, font: '400 24px/29px Lato' }}>
+            {title}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {address}
+          </Typography>
+        </Box>
+      </Box>
+    )
+      : ''
+  }
+      <Box
+        variant="contained"
+        sx={{
+          flex: 1, maxWidth: '700px',
+        }}
+      >
+        {
       sessions && sessions.map((session) => (
         session.date === date
           ? (
@@ -62,13 +76,14 @@ export const CinemaCard = ({
           : ''
       ))
       }
+      </Box>
     </Box>
-  </Box>
-);
+  );
+};
 CinemaCard.propTypes = {
   title: string,
   address: string,
   sessions: array,
   handleFilmClick: func,
-  date: array,
+  date: string,
 };

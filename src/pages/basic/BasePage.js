@@ -13,7 +13,6 @@ export const BasePage = () => {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.usersReducer.users);
   const [isUser, setIsUser] = useState(false);
-  const filmsArr = ['batman', 'man'];
   useEffect(() => {
     getUserData();
   }, []);
@@ -33,7 +32,6 @@ export const BasePage = () => {
           <Autocomplete
             className={classes.searchInput}
             freeSolo
-            options={filmsArr.map((options) => options)}
             renderInput={(params) => <TextField {...params} placeholder="Search..." />}
           />
         </div>

@@ -4,7 +4,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { getCinemasByFilm } from 'redux/actions/cinemas';
 import { getFilmInfo } from 'redux/actions/films';
 import { CinemaContainer } from './components/cinemaContainer/cinemaContainer';

@@ -2,7 +2,7 @@ import { Typography, Box } from '@mui/material';
 import {
   string, number, array,
 } from 'prop-types';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import React from 'react';
 
 export const FilmInfo = (

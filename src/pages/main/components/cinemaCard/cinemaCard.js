@@ -1,6 +1,6 @@
 import React from 'react';
 import { array, func, string } from 'prop-types';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import {
   Typography,
   Box,
@@ -33,7 +33,7 @@ export const CinemaCard = ({
       </Box>
     )
       : ''
-  }
+      }
       <Box
         variant="contained"
         sx={{
@@ -56,26 +56,26 @@ export const CinemaCard = ({
               </Box>
               <Box sx={{ maxWidth: '320px', width: '100%', display: 'flex' }}>
                 {
-            session.time && session.time.map((filmTime) => (
-              <Box
-                key={filmTime}
-                sx={{
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', mr: 2,
-                }}
-              >
-                <Button variant="contained" sx={{ backgroundColor: 'button.purple' }}>
-                  <Typography variant="button" color="common.white">{moment(filmTime).format('H:mm')}</Typography>
-                </Button>
-                <Typography align="center" color="text.secondary" variant="caption">{`от ${session.price} руб`}</Typography>
-              </Box>
-            ))
-            }
+                session.time && session.time.map((filmTime) => (
+                  <Box
+                    key={filmTime}
+                    sx={{
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', mr: 2,
+                    }}
+                  >
+                    <Button variant="contained" sx={{ backgroundColor: 'button.purple' }}>
+                      <Typography variant="button" color="common.white">{moment(filmTime).format('H:mm')}</Typography>
+                    </Button>
+                    <Typography align="center" color="text.secondary" variant="caption">{`от ${session.price} руб`}</Typography>
+                  </Box>
+                ))
+                }
               </Box>
             </Box>
           )
           : ''
       ))
-      }
+        }
       </Box>
     </Box>
   );

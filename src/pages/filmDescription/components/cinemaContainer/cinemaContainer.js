@@ -1,6 +1,6 @@
 import React from 'react';
 import { array, number } from 'prop-types';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import {
   Typography,
   Box,
@@ -12,21 +12,23 @@ export const CinemaContainer = ({ time, price, cinemas }) => (
     boxShadow: 'none', height: 'fit-content', minHeight: '70px', display: 'flex', justifyContent: 'space-between',
   }}
   >
-    {cinemas && cinemas.map((cinema) => (
-      <Box
-        key={cinema.title}
-        sx={{
-          ml: 3, mt: 2, maxWidth: '320px', width: '100%',
-        }}
-      >
-        <Typography gutterBottom component="div" sx={{ mb: 0, font: '400 24px/29px Lato' }}>
-          {cinema.title}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {cinema.address}
-        </Typography>
-      </Box>
-    ))}
+    {
+      cinemas && cinemas.map((cinema) => (
+        <Box
+          key={cinema.title}
+          sx={{
+            ml: 3, mt: 2, maxWidth: '320px', width: '100%',
+          }}
+        >
+          <Typography gutterBottom component="div" sx={{ mb: 0, font: '400 24px/29px Lato' }}>
+            {cinema.title}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {cinema.address}
+          </Typography>
+        </Box>
+      ))
+    }
     <Box variant="contained" sx={{ flex: 1, maxWidth: '700px' }}>
       <Box
         sx={{
@@ -48,7 +50,7 @@ export const CinemaContainer = ({ time, price, cinemas }) => (
                <Typography align="center" color="text.secondary" variant="caption">{`от ${price} руб`}</Typography>
              </Box>
            ))
-            }
+          }
         </Box>
       </Box>
     </Box>

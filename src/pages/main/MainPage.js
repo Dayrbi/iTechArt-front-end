@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import { getPopularFilms } from 'redux/actions/films';
 import { getAllCinemas, getCinemasByFilter } from 'redux/actions/cinemas';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { FilmCard } from './components/filmsCard/filmCard';
 import { CinemaCard } from './components/cinemaCard/cinemaCard';
 import { CustomArrowRight, CustomArrowLeft } from './components/customArrow/customArrow';
@@ -239,29 +239,29 @@ export const MainPage = () => {
         }}
         >
           {
-               dateArr && dateArr.date.map((date) => (
-                 <div className={classes.cinemaContainer} key={date}>
-                   <Box sx={{
-                     width: '100%', height: '50px', backgroundColor: 'grey.300', alignItems: 'center', display: 'flex', borderRadius: '10px 10px 0 0',
-                   }}
-                   >
-                     <Typography variant="body3" sx={{ fontWeight: 'fontWeightMedium', ml: 2 }}>{moment(date).format('dddd, DD MMMM')}</Typography>
-                   </Box>
-                   {
-              !errorCinema && cinemasArr.map((cinema) => (
-                <CinemaCard
-                  handleFilmClick={handleFilmClick}
-                  title={cinema.title}
-                  address={cinema.address}
-                  sessions={cinema.sessions}
-                  key={cinema.title}
-                  date={date}
-                />
-              ))
-            }
-                 </div>
-               ))
-        }
+            dateArr && dateArr.date.map((date) => (
+              <div className={classes.cinemaContainer} key={date}>
+                <Box sx={{
+                  width: '100%', height: '50px', backgroundColor: 'grey.300', alignItems: 'center', display: 'flex', borderRadius: '10px 10px 0 0',
+                }}
+                >
+                  <Typography variant="body3" sx={{ fontWeight: 'fontWeightMedium', ml: 2 }}>{moment(date).format('dddd, DD MMMM')}</Typography>
+                </Box>
+                {
+                !errorCinema && cinemasArr.map((cinema) => (
+                  <CinemaCard
+                    handleFilmClick={handleFilmClick}
+                    title={cinema.title}
+                    address={cinema.address}
+                    sessions={cinema.sessions}
+                    key={cinema.title}
+                    date={date}
+                  />
+                ))
+                }
+              </div>
+            ))
+          }
         </Box>
       </section>
     </div>

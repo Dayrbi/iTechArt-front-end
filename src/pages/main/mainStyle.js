@@ -6,51 +6,11 @@ export const useStyles = makeStyles((theme) => ({
     height: '100%',
     backgroundColor: theme.palette.background.main,
   },
-  appBar: {
-    height: '80px',
-    width: '100%',
-    backgroundColor: theme.palette.background.header,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    position: 'fixed',
-    zIndex: 1000,
-    top: 0,
-  },
-  searchContainer: {
-    width: '60%',
-    display: 'flex',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  searchInput: {
-    width: '50%',
-    backgroundColor: theme.palette.input.gray,
-    borderRadius: '8px',
-    marginRight: theme.spacing(3),
-    color: theme.palette.common.white,
-  },
-  searchTitle: {
-    fontFamily: 'Lato',
-    fontWeight: 600,
-    fontSize: '22px',
-    color: theme.palette.common.white,
-  },
-  butContainer: {
-    width: '25%',
-    height: '60%',
-    display: 'flex',
-    alignItems: 'center',
-  },
-  logButton: {
-    marginRight: theme.spacing(3),
-    color: theme.palette.common.white,
-  },
-  signButton: {
-    backgroundColor: theme.palette.button.purple,
-  },
   mainTitle: {
     fontSize: '38px',
+    fontFamily: 'Lato',
+    fontStyle: 'normal',
+    fontWeight: 600,
   },
   navSection: {
     width: '100%',
@@ -77,7 +37,7 @@ export const useStyles = makeStyles((theme) => ({
   selectContainer: {
     display: 'flex',
     justifyContent: 'flex-start',
-    width: '60%',
+    width: '50%',
   },
   filterBox: {
     display: 'flex',
@@ -88,7 +48,7 @@ export const useStyles = makeStyles((theme) => ({
   },
   selectInput: {
     backgroundColor: theme.palette.common.white,
-    boxShadow: theme.palette.shadows.container,
+    boxShadow: theme.shadows[1],
   },
   sliderSection: {
     display: 'flex',
@@ -105,25 +65,6 @@ export const useStyles = makeStyles((theme) => ({
   cinemaContainer: {
     display: 'flex',
     flexDirection: 'column',
-    width: '65%',
-    borderRadius: '10px',
-    backgroundColor: theme.palette.common.white,
-    boxShadow: theme.palette.shadows.container,
-  },
-  footerContainer: {
     width: '100%',
-    height: '59px',
-    backgroundColor: theme.palette.common.white,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  footerTitle: {
-    fontFamily: 'Lato',
-    fontStyle: 'normal',
-    fontWeight: 400,
-    fontSize: '16px',
-    lineHeight: '19px',
-    color: theme.palette.background.white,
   },
 }));

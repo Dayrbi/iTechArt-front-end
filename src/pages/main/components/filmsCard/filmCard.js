@@ -1,11 +1,14 @@
 import React from 'react';
-import { string, number } from 'prop-types';
+import { string, number, func } from 'prop-types';
 import {
   Typography, Card, CardActionArea, CardMedia, CardContent,
 } from '@mui/material';
 
-export const FilmCard = ({ id, img, title }) => (
+export const FilmCard = ({
+  id, img, title, handleFilmClick,
+}) => (
   <Card
+    onClick={() => handleFilmClick(id)}
     sx={{
       width: '240px', minHeight: '330px', boxShadow: 'none',
     }}
@@ -38,4 +41,5 @@ FilmCard.propTypes = {
   id: number,
   title: string,
   img: string,
+  handleFilmClick: func,
 };

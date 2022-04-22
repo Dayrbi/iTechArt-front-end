@@ -1,9 +1,12 @@
-import { GET_ALL_CINEMAS, GET_CINEMAS_BY_FILM, GET_CINEMAS_BY_FILTERS } from 'redux/actions/types';
+import {
+  GET_ALL_CINEMAS, GET_CINEMAS_BY_FILM, GET_CINEMAS_BY_FILTERS, GET_FILTER_PARAMS,
+} from 'redux/actions/types';
 
 const initialState = {
   cinemas: {
     allCinemas: [],
     filmCinemas: [],
+    filterParams: [],
   },
 };
 
@@ -15,6 +18,8 @@ export const cinemasReducer = (state = initialState, action) => {
       return { ...state, cinemas: { ...state.cinemas, filmCinemas: action.payload } };
     case GET_CINEMAS_BY_FILTERS:
       return { ...state, cinemas: { ...state.cinemas, allCinemas: action.payload } };
+    case GET_FILTER_PARAMS:
+      return { ...state, cinemas: { ...state.cinemas, filterParams: action.payload } };
     default: return state;
   }
 };

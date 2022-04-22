@@ -35,6 +35,13 @@ export const theme = createTheme({
       lineHeight: 1.43,
       letterSpacing: '0.01071em',
     },
+    bodyRate: {
+      fontFamily: ['Montserrat'].join(','),
+      fontWeight: 600,
+      fontStyle: 'normal',
+      fontSize: '14px',
+      letterSpacing: '0.01071em',
+    },
   },
   shadows: {
     1: '0px 1px 3px 0px rgb(0 0 0 / 30%)',

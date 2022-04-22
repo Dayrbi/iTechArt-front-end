@@ -44,7 +44,7 @@ export const CinemaContainer = ({ time, price, cinemas }) => (
                  display: 'flex', flexDirection: 'column', alignItems: 'center', mr: 2,
                }}
              >
-               <Button variant="contained" disabled={!moment(filmTime).isValid()} sx={{ backgroundColor: 'button.purple' }}>
+               <Button variant="contained" disabled={moment(filmTime).isBefore(new Date())} sx={{ backgroundColor: 'button.purple' }}>
                  <Typography variant="button" color="common.white">{moment(filmTime).format('H:mm')}</Typography>
                </Button>
                <Typography align="center" color="text.secondary" variant="caption">{`от ${price} руб`}</Typography>

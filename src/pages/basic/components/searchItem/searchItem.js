@@ -6,7 +6,7 @@ export const SearchItem = ({ option, handleClick }) => (
   <Box
     onClick={handleClick}
     sx={{
-      display: 'flex', alignItems: 'center', mb: 1, '&:hover': { backgroundColor: 'grey.300' },
+      display: 'flex', alignItems: 'center', mb: 1, '&:hover': { backgroundColor: 'grey.300' }, cursor: 'pointer',
     }}
   >
     <Box component="img" src={option.img} sx={{ ml: 1, width: '55px', height: '70px' }} />

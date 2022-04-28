@@ -35,6 +35,7 @@ export const useStyles = makeStyles((theme) => ({
     fontWeight: 600,
     fontSize: '22px',
     color: theme.palette.common.white,
+    cursor: 'pointer',
   },
   butContainer: {
     width: '25%',

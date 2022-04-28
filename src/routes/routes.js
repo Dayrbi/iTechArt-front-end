@@ -5,6 +5,7 @@ import { MainPage } from 'pages/main/MainPage';
 import RegistrationPage from 'pages/registration/RegistrationPage';
 import { BasePage } from 'pages/basic/BasePage';
 import { FilmDescription } from 'pages/filmDescription/FilmDescription';
+import { CheckoutPage } from 'pages/checkoutPage/CheckoutPage';
 
 export const Routing = () => (
   <Routes>
@@ -13,6 +14,7 @@ export const Routing = () => (
     <Route path="/" element={<BasePage />}>
       <Route path="/" element={<MainPage />} exact />
       <Route path="/filmDescription/:id" element={<FilmDescription />} exact />
+      <Route path="/checkout/:id" element={<CheckoutPage />} exact />
     </Route>
     <Route path="*" element={<Navigate to="/" />} />
   </Routes>

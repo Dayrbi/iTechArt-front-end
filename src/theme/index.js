@@ -8,6 +8,7 @@ export const theme = createTheme({
       purple: '#8561C5',
       white: '#676767',
       gray: '#9e9e9e',
+      darkBlue: '#001C3E',
     },
     button: {
       purple: '#3F3DC9',
@@ -27,6 +28,12 @@ export const theme = createTheme({
       fontSize: '40px',
       fontStyle: 'normal',
     },
+    customTitleH2: {
+      fontWeight: 600,
+      fontSize: '26px',
+      fontStyle: 'normal',
+      lineHeight: 1.93,
+    },
     body3: {
       fontFamily: ['Montserrat'].join(','),
       fontWeight: 400,
@@ -41,6 +48,21 @@ export const theme = createTheme({
       fontStyle: 'normal',
       fontSize: '14px',
       letterSpacing: '0.01071em',
+    },
+    caption: {
+      fontFamily: ['Lato'].join(','),
+    },
+    bodyTitle: {
+      fontFamily: ['Lato'].join(','),
+      fontSize: '20px',
+      fontStyle: 'normal',
+      fontWeight: 500,
+    },
+    cardTitle: {
+      fontStyle: 'normal',
+      fontWeight: 600,
+      fontSize: '24px',
+      lineHeight: 1.81,
     },
   },
   shadows: {

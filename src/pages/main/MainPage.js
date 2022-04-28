@@ -6,6 +6,9 @@ import { LocalizationProvider, DatePicker } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import {
+  useQueryParams, withDefault, StringParam, DateParam,
+} from 'use-query-params';
 import Slider from 'react-slick';
 import { getPopularFilms } from 'redux/actions/films';
 import { getAllCinemas, getCinemasByFilter, getFilterParams } from 'redux/actions/cinemas';
@@ -71,10 +74,10 @@ export const MainPage = () => {
   const [errorFilm, setErrorFilm] = useState(false);
   const [errorCinema, setErrorCinema] = useState(false);
   const [errorFilter, setErrorFilter] = useState(false);
-  const [filterOptions, setFilterOptions] = useState({
-    theatre: '',
-    city: '',
-    date: null,
+  const [filterOptions, setFilterOptions] = useQueryParams({
+    theatre: withDefault(StringParam, ''),
+    city: withDefault(StringParam, ''),
+    date: withDefault(DateParam, null),
   });
   useEffect(() => {
     getFilms();
@@ -99,7 +102,7 @@ export const MainPage = () => {
       return;
     }
     const { name, value } = event.target;
-    setFilterOptions((prevState) => ({ ...prevState, [name]: value }));
+    setFilterOptions((prevState) => ({ ...prevState, [name]: value }), 'push');
     getFilterCinemas();
   };
   async function getFilms() {
@@ -118,7 +121,8 @@ export const MainPage = () => {
   }
   async function getFilterCinemas() {
     try {
-      await dispatch(getCinemasByFilter(filterOptions));
+      const { theatre, city, date } = filterOptions;
+      await dispatch(getCinemasByFilter(theatre, city, date));
     } catch (e) {
       setErrorCinema(true);
     }
@@ -133,6 +137,11 @@ export const MainPage = () => {
   const handleFilmClick = (id) => {
     if (id) {
       navigate(`/filmDescription/${id}`);
+    }
+  };
+  const handleSessionClick = (id) => {
+    if (id) {
+      navigate(`/checkout/${id}`);
     }
   };
   return (
@@ -179,19 +188,18 @@ export const MainPage = () => {
           <div className={classes.selectContainer}>
             <div className={classes.filterBox}>
               <h3>City</h3>
-              <FormControl>
-                <Select
-                  className={classes.selectInput}
-                  value={filterOptions.city}
-                  name="city"
-                  onChange={handleChange}
-                >
-                  <MenuItem value=""><em>None</em></MenuItem>
-                  {!errorFilter && cityArr && cityArr.map((item) => (
-                    <MenuItem value={item} key={item}>{item}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <Select
+                className={classes.selectInput}
+                value={filterOptions.city}
+                name="city"
+                onChange={handleChange}
+              >
+                <MenuItem value=""><em>None</em></MenuItem>
+                {!errorFilter && cityArr && cityArr.map((item) => (
+                  <MenuItem value={item} key={item}>{item}</MenuItem>
+                ))}
+              </Select>
+
             </div>
             <div className={classes.filterBox}>
               <h3>Theatre</h3>
@@ -213,7 +221,7 @@ export const MainPage = () => {
               <h3>Date and time</h3>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
-                  className={`${classes.selectInput}`}
+                  className={classes.selectInput}
                   value={filterOptions.date}
                   onChange={(newValue) => {
                     handleChange(newValue);
@@ -264,6 +272,7 @@ export const MainPage = () => {
                 {
                 !errorCinema && cinemasArr.map((cinema) => (
                   <CinemaCard
+                    handleSessionClick={handleSessionClick}
                     handleFilmClick={handleFilmClick}
                     title={cinema.title}
                     address={cinema.address}

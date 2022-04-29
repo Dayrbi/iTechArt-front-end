@@ -38,6 +38,7 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'flex-start',
     width: '50%',
+    minWidth: '450px',
   },
   filterBox: {
     display: 'flex',

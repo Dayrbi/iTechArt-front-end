@@ -88,6 +88,12 @@ export const MainPage = () => {
   useEffect(() => {
     getParams();
   }, []);
+  useEffect(() => {
+    getFilterCinemas();
+  }, [filterOptions]);
+  useEffect(() => {
+    getFilterCinemas();
+  }, []);
   const dispatch = useDispatch();
   const filmsArr = useSelector((state) => state.filmsReducer.films.popular);
   const cinemasArr = useSelector((state) => state.cinemasReducer.cinemas.allCinemas);
@@ -95,7 +101,7 @@ export const MainPage = () => {
   const [dateArr] = cinemasArr;
   const cityArr = [...new Set(filterParamsArr.map((item) => item.city))];
   const theatreName = [...new Set(filterParamsArr.map((item) => item.title))];
-  const handleChange = (event) => {
+  const handleChange = async (event) => {
     if (!event.target) {
       setFilterOptions((prevState) => ({ ...prevState, date: event }));
       getFilterCinemas();
@@ -103,8 +109,8 @@ export const MainPage = () => {
     }
     const { name, value } = event.target;
     setFilterOptions((prevState) => ({ ...prevState, [name]: value }), 'push');
-    getFilterCinemas();
   };
+
   async function getFilms() {
     try {
       await dispatch(getPopularFilms());

@@ -23,7 +23,7 @@ export const useStyles = makeStyles((theme) => ({
     height: '100%',
   },
   containerContent: {
-    width: '60%',
+    width: '80%',
     height: '100%',
     display: 'flex',
     justifyContent: 'center',

@@ -1,37 +1,94 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Autocomplete, TextField, Button, Avatar, Typography,
 } from '@mui/material';
+import debounce from 'lodash.debounce';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { useQueryParams, withDefault, StringParam } from 'use-query-params';
 import { authUser } from 'redux/actions/user';
+import { getFilmsForSearch } from 'redux/actions/films';
 import { useStyles } from './baseStyle';
+import { SearchItem } from './components/searchItem/searchItem';
 
 export const BasePage = () => {
   const classes = useStyles();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.usersReducer.users);
+  const filmSearchData = useSelector((state) => state.filmsReducer.films.filmSearch);
   const [isUser, setIsUser] = useState(false);
+  const [filmName, setFilmName] = useQueryParams({ search: withDefault(StringParam, '') });
+  const [errorFilm, setErrorFilm] = useState(false);
   useEffect(() => {
     getUserData();
   }, []);
-  const getUserData = async () => {
+  useEffect(() => () => {
+    debouncedChangeHandler.cancel();
+  }, []);
+
+  async function getUserData() {
     try {
       setIsUser(true);
       await dispatch(authUser());
     } catch (e) {
       setIsUser(false);
     }
+  }
+  async function getSearchFilms() {
+    try {
+      setErrorFilm(false);
+      const { search } = filmName;
+      await dispatch(getFilmsForSearch(search));
+    } catch (e) {
+      setErrorFilm(true);
+    }
+  }
+  const handleChange = (event) => {
+    if (event.target.value) {
+      setFilmName({ search: event.target.value.trim() });
+      getSearchFilms();
+    }
+  };
+  const debouncedChangeHandler = useCallback(
+    debounce(handleChange, 200),
+    [filmName],
+  );
+  const handleClick = (id) => {
+    if (id) {
+      navigate(`/filmDescription/${id}`);
+    }
   };
   return (
     <div className={classes.mainContainer}>
       <header className={classes.appBar}>
         <div className={classes.searchContainer}>
-          <span className={classes.searchTitle}>CinemaBuy</span>
+          <span className={classes.searchTitle} onClick={() => navigate('/')}>CinemaBuy</span>
           <Autocomplete
             className={classes.searchInput}
             freeSolo
+            value={filmName.search}
+            loading={!!filmSearchData}
+            loadingText={errorFilm ? 'Nothing found for your request' : 'Loading...'}
+            onInputChange={debouncedChangeHandler}
+            options={filmSearchData}
+            getOptionLabel={(option) => {
+              if (typeof option === 'string') {
+                return option;
+              }
+              if (option.inputValue) {
+                return option.inputValue;
+              }
+              return option.title;
+            }}
+            renderOption={(props, option) => (
+              <SearchItem
+                {...props}
+                option={option}
+                key={option.id}
+                handleClick={() => handleClick(option.id)}
+              />
+            )}
             renderInput={(params) => <TextField {...params} placeholder="Search..." />}
           />
         </div>

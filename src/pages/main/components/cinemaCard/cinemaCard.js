@@ -8,9 +8,9 @@ import {
 } from '@mui/material';
 
 export const CinemaCard = ({
-  title, address, sessions, handleFilmClick, date,
+  title, address, sessions, handleFilmClick, handleSessionClick, date,
 }) => {
-  const isExist = sessions.map((session) => session.date === date);
+  const isExist = sessions.map((session) => moment(session.date).format() === date);
   return (
     <Box sx={{
       boxShadow: 'none', display: 'flex', justifyContent: 'space-between',
@@ -42,7 +42,7 @@ export const CinemaCard = ({
       >
         {
       sessions && sessions.map((session) => (
-        session.date === date
+        moment(session.date).format() === date
           ? (
             <Box
               key={session.time}
@@ -63,8 +63,8 @@ export const CinemaCard = ({
                       display: 'flex', flexDirection: 'column', alignItems: 'center', mr: 2,
                     }}
                   >
-                    <Button variant="contained" sx={{ backgroundColor: 'button.purple' }}>
-                      <Typography variant="button" color="common.white">{moment(filmTime).format('H:mm')}</Typography>
+                    <Button variant="contained" disabled={moment(filmTime).isBefore(new Date())} sx={{ backgroundColor: 'button.purple' }}>
+                      <Typography variant="button" onClick={() => handleSessionClick(session._id)} color="common.white">{moment(filmTime).format('H:mm')}</Typography>
                     </Button>
                     <Typography align="center" color="text.secondary" variant="caption">{`от ${session.price} руб`}</Typography>
                   </Box>
@@ -85,5 +85,6 @@ CinemaCard.propTypes = {
   address: string,
   sessions: array,
   handleFilmClick: func,
+  handleSessionClick: func,
   date: string,
 };

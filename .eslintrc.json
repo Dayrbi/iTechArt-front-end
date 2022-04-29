@@ -31,7 +31,8 @@
         "jsx-a11y/no-static-element-interactions": "off",
         "default-param-last": "off",
         "no-use-before-define": "off",
-        "no-underscore-dangle":"off"
+        "no-underscore-dangle":"off",
+        "no-shadow": "off"
 
     }
 }

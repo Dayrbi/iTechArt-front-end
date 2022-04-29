@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react';
 import {
   TextField, Link, Select, Box, Typography, FormControl, MenuItem,
 } from '@mui/material';
-import { LocalizationProvider, DateTimePicker } from '@mui/lab';
+import { LocalizationProvider, DatePicker } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import {
+  useQueryParams, withDefault, StringParam, DateParam,
+} from 'use-query-params';
 import Slider from 'react-slick';
 import { getPopularFilms } from 'redux/actions/films';
-import { getAllCinemas, getCinemasByFilter } from 'redux/actions/cinemas';
+import { getAllCinemas, getCinemasByFilter, getFilterParams } from 'redux/actions/cinemas';
 import moment from 'moment-timezone';
 import { FilmCard } from './components/filmsCard/filmCard';
 import { CinemaCard } from './components/cinemaCard/cinemaCard';
@@ -70,10 +73,11 @@ export const MainPage = () => {
   const navigate = useNavigate();
   const [errorFilm, setErrorFilm] = useState(false);
   const [errorCinema, setErrorCinema] = useState(false);
-  const [filterOptions, setFilterOptions] = useState({
-    theatre: '',
-    city: '',
-    date: moment().format(),
+  const [errorFilter, setErrorFilter] = useState(false);
+  const [filterOptions, setFilterOptions] = useQueryParams({
+    theatre: withDefault(StringParam, ''),
+    city: withDefault(StringParam, ''),
+    date: withDefault(DateParam, null),
   });
   useEffect(() => {
     getFilms();
@@ -81,12 +85,16 @@ export const MainPage = () => {
   useEffect(() => {
     getCinemas();
   }, []);
+  useEffect(() => {
+    getParams();
+  }, []);
   const dispatch = useDispatch();
   const filmsArr = useSelector((state) => state.filmsReducer.films.popular);
   const cinemasArr = useSelector((state) => state.cinemasReducer.cinemas.allCinemas);
+  const filterParamsArr = useSelector((state) => state.cinemasReducer.cinemas.filterParams);
   const [dateArr] = cinemasArr;
-  const cityArr = [...new Set(cinemasArr.map((item) => item.city))];
-  const theatreName = [...new Set(cinemasArr.map((item) => item.title))];
+  const cityArr = [...new Set(filterParamsArr.map((item) => item.city))];
+  const theatreName = [...new Set(filterParamsArr.map((item) => item.title))];
   const handleChange = (event) => {
     if (!event.target) {
       setFilterOptions((prevState) => ({ ...prevState, date: event }));
@@ -94,7 +102,7 @@ export const MainPage = () => {
       return;
     }
     const { name, value } = event.target;
-    setFilterOptions((prevState) => ({ ...prevState, [name]: value }));
+    setFilterOptions((prevState) => ({ ...prevState, [name]: value }), 'push');
     getFilterCinemas();
   };
   async function getFilms() {
@@ -113,14 +121,27 @@ export const MainPage = () => {
   }
   async function getFilterCinemas() {
     try {
-      await dispatch(getCinemasByFilter(filterOptions));
+      const { theatre, city, date } = filterOptions;
+      await dispatch(getCinemasByFilter(theatre, city, date));
     } catch (e) {
       setErrorCinema(true);
+    }
+  }
+  async function getParams() {
+    try {
+      await dispatch(getFilterParams());
+    } catch (e) {
+      setErrorFilter(true);
     }
   }
   const handleFilmClick = (id) => {
     if (id) {
       navigate(`/filmDescription/${id}`);
+    }
+  };
+  const handleSessionClick = (id) => {
+    if (id) {
+      navigate(`/checkout/${id}`);
     }
   };
   return (
@@ -167,18 +188,18 @@ export const MainPage = () => {
           <div className={classes.selectContainer}>
             <div className={classes.filterBox}>
               <h3>City</h3>
-              <FormControl>
-                <Select
-                  className={classes.selectInput}
-                  value={filterOptions.city}
-                  name="city"
-                  onChange={handleChange}
-                >
-                  {cityArr && cityArr.map((item) => (
-                    <MenuItem value={item} key={item}>{item}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <Select
+                className={classes.selectInput}
+                value={filterOptions.city}
+                name="city"
+                onChange={handleChange}
+              >
+                <MenuItem value=""><em>None</em></MenuItem>
+                {!errorFilter && cityArr && cityArr.map((item) => (
+                  <MenuItem value={item} key={item}>{item}</MenuItem>
+                ))}
+              </Select>
+
             </div>
             <div className={classes.filterBox}>
               <h3>Theatre</h3>
@@ -189,7 +210,8 @@ export const MainPage = () => {
                   name="theatre"
                   onChange={handleChange}
                 >
-                  {theatreName && theatreName.map((item) => (
+                  <MenuItem value=""><em>None</em></MenuItem>
+                  {!errorFilter && theatreName && theatreName.map((item) => (
                     <MenuItem value={item} key={item}>{item}</MenuItem>
                   ))}
                 </Select>
@@ -198,7 +220,7 @@ export const MainPage = () => {
             <div className={classes.filterBox}>
               <h3>Date and time</h3>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DateTimePicker
+                <DatePicker
                   className={classes.selectInput}
                   value={filterOptions.date}
                   onChange={(newValue) => {
@@ -250,6 +272,7 @@ export const MainPage = () => {
                 {
                 !errorCinema && cinemasArr.map((cinema) => (
                   <CinemaCard
+                    handleSessionClick={handleSessionClick}
                     handleFilmClick={handleFilmClick}
                     title={cinema.title}
                     address={cinema.address}

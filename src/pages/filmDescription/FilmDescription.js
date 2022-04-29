@@ -21,10 +21,10 @@ export const FilmDescription = () => {
   const [errorCinema, setErrorCinema] = useState(false);
   useEffect(() => {
     getFilm();
-  }, []);
+  }, [id]);
   useEffect(() => {
     getSessions();
-  }, []);
+  }, [id]);
   async function getFilm() {
     try {
       await dispatch(getFilmInfo(id));

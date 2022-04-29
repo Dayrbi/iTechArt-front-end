@@ -1,5 +1,7 @@
 import { api } from 'services/api.servises';
-import { GET_FILM_INFO, GET_POPULAR_FILMS } from './types';
+import {
+  GET_FILMS_FOR_CHECKOUT, GET_FILMS_FOR_SEARCH, GET_FILM_INFO, GET_POPULAR_FILMS,
+} from './types';
 
 export function getPopularFilms() {
   return async function getPopularFilmsThunk(dispatch) {
@@ -17,5 +19,23 @@ export function getFilmInfo(id) {
       throw new Error();
     }
     dispatch({ type: GET_FILM_INFO, payload: responce.data });
+  };
+}
+export function getFilmsForSearch(filmName) {
+  return async function getFilmsForSearchThunk(dispatch) {
+    const responce = await api.get('/movies/getFilmsBySearch', { params: { filmName } });
+    if (!responce.data) {
+      throw new Error();
+    }
+    dispatch({ type: GET_FILMS_FOR_SEARCH, payload: responce.data });
+  };
+}
+export function getFilmForCheckout(id) {
+  return async function getFilmForCheckoutThunk(dispatch) {
+    const responce = await api.get('/movies/getFilmInfoForCheckout', { params: { id } });
+    if (!responce.data) {
+      throw new Error();
+    }
+    dispatch({ type: GET_FILMS_FOR_CHECKOUT, payload: responce.data });
   };
 }

@@ -54,7 +54,12 @@ export const FilmInfo = (
             </Box>
             <Box sx={{ mt: 2 }}>
               <Typography variant="body3" sx={{ fontWeight: 'fontWeightMedium' }}>Budget: </Typography>
-              <Typography variant="body3">{`${budget.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')}$`}</Typography>
+              <Typography
+                variant="body3"
+              >
+                {budget > 0 ? `${budget.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')}$` : 'Information not found'}
+
+              </Typography>
             </Box>
             <Box sx={{ mt: 2 }}>
               <Typography variant="body3" sx={{ fontWeight: 'fontWeightMedium' }}>Actors: </Typography>

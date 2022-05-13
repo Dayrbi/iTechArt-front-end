@@ -22,8 +22,6 @@ export const BasePage = () => {
   const [errorFilm, setErrorFilm] = useState(false);
   useEffect(() => {
     getUserData();
-  }, []);
-  useEffect(() => () => {
     debouncedChangeHandler.cancel();
   }, []);
   useEffect(() => {

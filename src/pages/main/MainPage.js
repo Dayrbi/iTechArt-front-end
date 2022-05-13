@@ -11,7 +11,7 @@ import {
 } from 'use-query-params';
 import Slider from 'react-slick';
 import { getPopularFilms } from 'redux/actions/films';
-import { getAllCinemas, getCinemasByFilter, getFilterParams } from 'redux/actions/cinemas';
+import { getCinemasByFilter, getFilterParams } from 'redux/actions/cinemas';
 import moment from 'moment-timezone';
 import { FilmCard } from './components/filmsCard/filmCard';
 import { CinemaCard } from './components/cinemaCard/cinemaCard';
@@ -81,19 +81,11 @@ export const MainPage = () => {
   });
   useEffect(() => {
     getFilms();
-  }, []);
-  useEffect(() => {
-    getCinemas();
-  }, []);
-  useEffect(() => {
     getParams();
   }, []);
   useEffect(() => {
     getFilterCinemas();
   }, [filterOptions]);
-  useEffect(() => {
-    getFilterCinemas();
-  }, []);
   const dispatch = useDispatch();
   const filmsArr = useSelector((state) => state.filmsReducer.films.popular);
   const cinemasArr = useSelector((state) => state.cinemasReducer.cinemas.allCinemas);
@@ -104,7 +96,6 @@ export const MainPage = () => {
   const handleChange = async (event) => {
     if (!event.target) {
       setFilterOptions((prevState) => ({ ...prevState, date: event }));
-      getFilterCinemas();
       return;
     }
     const { name, value } = event.target;
@@ -116,13 +107,6 @@ export const MainPage = () => {
       await dispatch(getPopularFilms());
     } catch (e) {
       setErrorFilm(true);
-    }
-  }
-  async function getCinemas() {
-    try {
-      await dispatch(getAllCinemas());
-    } catch (e) {
-      setErrorCinema(true);
     }
   }
   async function getFilterCinemas() {
@@ -234,6 +218,7 @@ export const MainPage = () => {
                   }}
                   renderInput={(params) => <TextField {...params} />}
                   name="date"
+                  clearable
                 />
               </LocalizationProvider>
             </div>

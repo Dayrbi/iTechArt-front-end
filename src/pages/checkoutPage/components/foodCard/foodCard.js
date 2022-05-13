@@ -1,13 +1,14 @@
 import React from 'react';
 import {
-  Box,
-  Card, CardActionArea, CardActions, CardContent, CardMedia, Typography,
+  Box, Card, CardActionArea, CardActions, CardContent, CardMedia, Typography,
 } from '@mui/material';
 import {
-  string, number,
+  string, number, func,
 } from 'prop-types';
 
-export const FoodCard = ({ img, title, price }) => (
+export const FoodCard = ({
+  img, title, price, handleRemoveFood, handleAddFood,
+}) => (
   <Card sx={{
     width: '100%', height: '140px', boxShadow: '1', borderRadius: '8px',
   }}
@@ -29,8 +30,7 @@ export const FoodCard = ({ img, title, price }) => (
         <Box
           variant="outlined"
           sx={{
-            width:
-              '20px',
+            width: '20px',
             height: '20px',
             display: 'flex',
             justifyContent: 'center',
@@ -43,6 +43,7 @@ export const FoodCard = ({ img, title, price }) => (
               backgroundColor: 'grey.400',
             },
           }}
+          onClick={() => handleAddFood()}
         >
           +
         </Box>
@@ -62,6 +63,7 @@ export const FoodCard = ({ img, title, price }) => (
               backgroundColor: 'grey.400',
             },
           }}
+          onClick={() => handleRemoveFood()}
         >
           -
         </Box>
@@ -73,4 +75,6 @@ FoodCard.propTypes = {
   img: string,
   title: string,
   price: number,
+  handleAddFood: func,
+  handleRemoveFood: func,
 };

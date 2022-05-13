@@ -19,6 +19,11 @@ export const theme = createTheme({
     grey: {
       main: '#424242',
     },
+    place: {
+      couples: '#FFB1B1',
+      vip: '#BDE0FF',
+      selected: '#6D6BD4',
+    },
   },
   typography: {
     fontFamily: ['Lato'].join(','),

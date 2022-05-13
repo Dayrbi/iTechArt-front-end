@@ -10,7 +10,7 @@ import {
 export const CinemaCard = ({
   title, address, sessions, handleFilmClick, handleSessionClick, date,
 }) => {
-  const isExist = sessions.map((session) => moment(session.date).format() === date);
+  const isExist = sessions.map((session) => moment(session.date).format() === moment(date).format());
   return (
     <Box sx={{
       boxShadow: 'none', display: 'flex', justifyContent: 'space-between',
@@ -42,7 +42,7 @@ export const CinemaCard = ({
       >
         {
       sessions && sessions.map((session) => (
-        moment(session.date).format() === date
+        moment(session.date).format() === moment(date).format()
           ? (
             <Box
               key={session.time}

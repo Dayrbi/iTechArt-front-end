@@ -1,5 +1,5 @@
 import React from 'react';
-import { array, number } from 'prop-types';
+import { array, func, number } from 'prop-types';
 import moment from 'moment-timezone';
 import {
   Typography,
@@ -7,7 +7,9 @@ import {
   Button,
 } from '@mui/material';
 
-export const CinemaContainer = ({ time, price, cinemas }) => (
+export const CinemaContainer = ({
+  time, price, cinemas, handleSessionClick, id,
+}) => (
   <Box sx={{
     boxShadow: 'none', height: 'fit-content', minHeight: '70px', display: 'flex', justifyContent: 'space-between',
   }}
@@ -44,7 +46,12 @@ export const CinemaContainer = ({ time, price, cinemas }) => (
                  display: 'flex', flexDirection: 'column', alignItems: 'center', mr: 2,
                }}
              >
-               <Button variant="contained" disabled={moment(filmTime).isBefore(new Date())} sx={{ backgroundColor: 'button.purple' }}>
+               <Button
+                 variant="contained"
+                 onClick={() => handleSessionClick(id, filmTime)}
+                 disabled={moment(filmTime).isBefore(new Date())}
+                 sx={{ backgroundColor: 'button.purple' }}
+               >
                  <Typography variant="button" color="common.white">{moment(filmTime).format('H:mm')}</Typography>
                </Button>
                <Typography align="center" color="text.secondary" variant="caption">{`от ${price} руб`}</Typography>
@@ -60,4 +67,6 @@ CinemaContainer.propTypes = {
   time: array,
   price: number,
   cinemas: array,
+  id: number,
+  handleSessionClick: func,
 };

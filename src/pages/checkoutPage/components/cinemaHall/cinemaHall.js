@@ -18,7 +18,7 @@ export const CinemaHall = ({ columns, rowIndex, handlePlaceClick }) => (
               size="small"
               variant="contained"
               disabled={column.disable}
-              onClick={() => handlePlaceClick(column.place, rowIndex)}
+              onClick={() => handlePlaceClick(column.place - 1, rowIndex)}
             >
               <Typography variant="button" sx={{ color: '#4F4F4F' }}>{column.place}</Typography>
             </Button>
@@ -32,7 +32,7 @@ export const CinemaHall = ({ columns, rowIndex, handlePlaceClick }) => (
               size="small"
               variant="contained"
               disabled={column.disable}
-              onClick={() => handlePlaceClick(column.place, rowIndex)}
+              onClick={() => handlePlaceClick(column.place - 1, rowIndex)}
             >
               <Typography variant="button" sx={{ color: '#4F4F4F' }}>{column.place}</Typography>
             </Button>

@@ -3,11 +3,11 @@ import {
   Box, Card, CardActionArea, CardActions, CardContent, CardMedia, Typography,
 } from '@mui/material';
 import {
-  string, number, func,
+  string, number, func, object,
 } from 'prop-types';
 
 export const FoodCard = ({
-  img, title, price, handleRemoveFood, handleAddFood,
+  img, title, price, handleRemoveFood, handleAddFood, foodState,
 }) => (
   <Card sx={{
     width: '100%', height: '140px', boxShadow: '1', borderRadius: '8px',
@@ -43,11 +43,11 @@ export const FoodCard = ({
               backgroundColor: 'grey.400',
             },
           }}
-          onClick={() => handleAddFood()}
+          onClick={() => handleAddFood(title, price)}
         >
           +
         </Box>
-        <Typography variant="subtitle2" sx={{ mx: 1 }}>0</Typography>
+        <Typography variant="subtitle2" sx={{ mx: 1 }}>{foodState && foodState[title]}</Typography>
         <Box
           sx={{
             width: '20px',
@@ -63,7 +63,7 @@ export const FoodCard = ({
               backgroundColor: 'grey.400',
             },
           }}
-          onClick={() => handleRemoveFood()}
+          onClick={() => handleRemoveFood(title)}
         >
           -
         </Box>
@@ -77,4 +77,5 @@ FoodCard.propTypes = {
   price: number,
   handleAddFood: func,
   handleRemoveFood: func,
+  foodState: object,
 };

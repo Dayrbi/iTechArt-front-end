@@ -15,14 +15,7 @@ export const usersReducer = (state = initialState, action) => {
     case LOGIN_USER:
       return { ...state, users: { ...state.users, token: action.payload } };
     case AUTH_USER:
-      return {
-        ...state,
-        users: {
-          ...state.users,
-          id: action.payload.userId,
-          username: action.payload.username,
-        },
-      };
+      return { ...state, users: { ...state.users, id: action.payload.userId, username: action.payload.username } };
     default: return state;
   }
 };

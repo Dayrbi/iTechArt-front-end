@@ -129,9 +129,9 @@ export const MainPage = () => {
       navigate(`/filmDescription/${id}`);
     }
   };
-  const handleSessionClick = (id) => {
+  const handleSessionClick = (id, time) => {
     if (id) {
-      navigate(`/checkout/${id}`);
+      navigate(`/checkout/${id}/${time}`);
     }
   };
   return (

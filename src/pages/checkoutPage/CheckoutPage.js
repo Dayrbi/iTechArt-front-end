@@ -1,12 +1,14 @@
 import {
-  Box, Skeleton, Typography,
+  Alert,
+  Box, Skeleton, Snackbar, Typography,
 } from '@mui/material';
 import moment from 'moment-timezone';
 import React, { useEffect, useReducer, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { getCinemasForCheckout } from 'redux/actions/cinemas';
+import { getCinemasForCheckout, updateCinemaHall } from 'redux/actions/cinemas';
 import { getFilmForCheckout } from 'redux/actions/films';
+import { createOrder } from 'redux/actions/orders';
 import { useStyles } from './CheckoutPageStyle';
 import { CinemaHall } from './components/cinemaHall/cinemaHall';
 import { FoodCard } from './components/foodCard/foodCard';
@@ -15,23 +17,28 @@ import { SelectedCinemaPlace } from './components/selectedcinema/selectedCinemaP
 
 export const CheckoutPage = () => {
   const classes = useStyles();
-  const { id } = useParams();
+  const { id, time } = useParams();
   const [sessionData] = useSelector((state) => state.cinemasReducer.cinemas.checkoutCinemas);
   const [filmsArr] = useSelector((state) => state.filmsReducer.films.filmCheckout);
+  const userId = useSelector((state) => state.usersReducer.users.id);
   const dispatch = useDispatch();
   const [sessionError, setSessionError] = useState(false);
   const [filmError, setFilmError] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState([]);
   const [selectedFood, setSelectedFood] = useState([]);
-  const initialState = sessionData.food.reduce((accObj, food) => ({ ...accObj, [food.title]: 0 }), {});
-  const [foodState, dispatchFood] = useReducer(foodReducer, initialState);
+  const [userExist, setUserExist] = useState(true);
+  const [IsBuyError, setIsBuyError] = useState(true);
+  const [foodState, dispatchFood] = useReducer(foodReducer, { food: {} });
   useEffect(() => {
     getSession();
     getFilm();
   }, []);
+  useEffect(() => {
+    createInitialState();
+  }, [sessionData]);
   async function getSession() {
     try {
-      dispatch(getCinemasForCheckout(id));
+      dispatch(getCinemasForCheckout(id, time));
     } catch (e) {
       setSessionError(true);
     }
@@ -43,36 +50,129 @@ export const CheckoutPage = () => {
       setFilmError(true);
     }
   }
-  const foodReducer = (foodState, action) => {
+  async function updateCinema() {
+    try {
+      const [cinemaHallArr] = sessionData.cinemaHall;
+      const { cinemaHall } = cinemaHallArr;
+      dispatch(updateCinemaHall(id, cinemaHall, time));
+    } catch (e) {
+      setIsBuyError(false);
+    }
+  }
+  async function addNewOrder(cinemaName, city) {
+    try {
+      const { filmId, date } = sessionData;
+      const { img, title } = filmsArr;
+      const amount = selectedSum();
+      dispatch(createOrder(selectedPlace, selectedFood, filmId, amount, time, date, cinemaName, city, img, title, userId));
+    } catch (e) {
+      setIsBuyError(false);
+    }
+  }
+  function createInitialState() {
+    const initialState = sessionData && sessionData.food.reduce((accObj, food) => ({ ...accObj, [food.title]: 0 }), {});
+    dispatchFood({ type: 'initial', initialState });
+  }
+  function foodReducer(foodState, action) {
     switch (action.type) {
+      case 'initial':
+        return { ...foodState, food: action.initialState };
       case 'increment':
-        return { [action.title]: foodState[action.title] + 1 };
+        return { ...foodState, food: { ...foodState.food, [action.title]: foodState.food[action.title] + 1 } };
       case 'decrement':
-        return { [action.title]: foodState[action.title] + 1 };
+        return { ...foodState, food: { ...foodState.food, [action.title]: foodState.food[action.title] - 1 } };
       default:
         return foodState;
     }
-  };
+  }
   const handlePlaceClick = (column, row) => {
-    const [placeInfo] = sessionData.cinemaId.map((cinema) => cinema.cinemaHall[row][column]);
-    for (let i = 0; i < sessionData.cinemaId.length; i++) {
-      if (sessionData.cinemaId[i].cinemaHall[row][column - 1].selected) {
-        sessionData.cinemaId[i].cinemaHall[row][column - 1].selected = false;
-        const deleteIndex = selectedPlace.findIndex((place) => place.seat === column && place.row === row + 1);
-        const selectedPlaceCopy = [...selectedPlace];
-        selectedPlaceCopy.splice(deleteIndex, 1);
-        setSelectedPlace(selectedPlaceCopy);
-      } else {
-        sessionData.cinemaId[i].cinemaHall[row][column - 1].selected = true;
-        placeInfo.seat = column;
-        placeInfo.row = row + 1;
-        placeInfo.price = 10;
-        setSelectedPlace([...selectedPlace, placeInfo]);
+    if (selectedPlace.length < 5) {
+      const [placeInfo] = sessionData.cinemaHall.map((hall) => hall.cinemaHall[row][column]);
+      for (let i = 0; i < sessionData.cinemaHall.length; i++) {
+        if (sessionData.cinemaHall[i].cinemaHall[row][column].selected) {
+          sessionData.cinemaHall[i].cinemaHall[row][column].selected = false;
+          const deleteIndex = selectedPlace.findIndex((place) => place.seat === column && place.row === row + 1);
+          const selectedPlaceCopy = [...selectedPlace];
+          selectedPlaceCopy.splice(deleteIndex, 1);
+          setSelectedPlace(selectedPlaceCopy);
+        } else {
+          sessionData.cinemaHall[i].cinemaHall[row][column].selected = true;
+          placeInfo.seat = column + 1;
+          placeInfo.row = row + 1;
+          setSelectedPlace([...selectedPlace, placeInfo]);
+        }
       }
     }
   };
+  const handleAddFood = (title, price) => {
+    dispatchFood({ type: 'increment', title });
+    const isExist = selectedFood.find((food) => food.title === title);
+    if (isExist) {
+      const selectedFoodCopy = selectedFood.map((food) => (food.title === title ? { ...food, amount: food.amount + 1 } : food));
+      setSelectedFood(selectedFoodCopy);
+    } else {
+      setSelectedFood([...selectedFood, { title, price, amount: 1 }]);
+    }
+  };
+  const handleRemoveFood = (title) => {
+    if (foodState.food[title] !== 0) {
+      dispatchFood({ type: 'decrement', title });
+      const selectedFoodCopy = selectedFood.map((food) => (food.title === title ? { ...food, amount: food.amount - 1 } : food));
+      const selectedFoodRemoveCopy = selectedFoodCopy.filter((food) => food.amount !== 0);
+      setSelectedFood(selectedFoodRemoveCopy);
+    }
+  };
+  const selectedSum = () => {
+    const placeSum = selectedPlace.reduce((sum, place) => (sum + place.price), 0);
+    const foodSum = selectedFood.reduce((sum, food) => (sum + (food.price * food.amount)), 0);
+    return placeSum + foodSum;
+  };
+  const handlePay = () => {
+    if (sessionData.cinemaId) {
+      const [cinema] = sessionData.cinemaId;
+      const [cinemaHall] = sessionData.cinemaHall;
+      for (let i = 0; i < selectedPlace.length; i++) {
+        const { row, seat } = selectedPlace[i];
+        cinemaHall.cinemaHall[row - 1][seat - 1].disable = true;
+      }
+      const { title, city } = cinema;
+      updateCinema();
+      addNewOrder(title, city);
+      setSelectedFood([]);
+      setSelectedPlace([]);
+    } else {
+      setUserExist(false);
+    }
+  };
+  const userAlertClose = () => {
+    setUserExist(true);
+  };
+  const buyErrorClose = () => {
+    setIsBuyError(true);
+  };
   return (
     <section className={classes.mainContainer}>
+      <Snackbar
+        open={!userExist}
+        autoHideDuration={3000}
+        onClose={userAlertClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert variant="filled" severity="error" onClose={userAlertClose} sx={{ width: '100%', mt: 9 }}>
+          Need to login to buy tickets
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={!IsBuyError}
+        autoHideDuration={3000}
+        onClose={buyErrorClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert variant="filled" severity="error" onClose={buyErrorClose} sx={{ width: '100%', mt: 9 }}>
+
+          The order has not been placed, please try again
+        </Alert>
+      </Snackbar>
       <Box sx={{
         width: '80%', display: 'flex', justifyContent: 'flex-start', mb: 3,
       }}
@@ -118,7 +218,7 @@ export const CheckoutPage = () => {
                   variant="caption"
                   sx={{ color: 'common.white' }}
                 >
-                  {moment(!sessionError && sessionData.date).format('L')}
+                  {moment(time).format('YYYY-MM-DD, HH:mm')}
 
                 </Typography>
               )
@@ -154,6 +254,9 @@ export const CheckoutPage = () => {
                   title={card.title}
                   price={card.price}
                   key={card.title}
+                  handleAddFood={handleAddFood}
+                  handleRemoveFood={handleRemoveFood}
+                  foodState={foodState.food}
                 />
               ))}
             </Box>
@@ -173,8 +276,8 @@ export const CheckoutPage = () => {
             }}
             >
               {
-              sessionData && sessionData.cinemaId.map((cinema) => (
-                cinema.cinemaHall.map((columns, rowInd) => (
+              sessionData && sessionData.cinemaHall.map((hall) => (
+                hall.cinemaHall.map((columns, rowInd) => (
                   <Box
                     key={rowInd}
                     sx={{
@@ -198,7 +301,7 @@ export const CheckoutPage = () => {
             >
               <Typography variant="cardTitle">Selected</Typography>
             </Box>
-            <SelectedCinemaPlace places={selectedPlace} />
+            <SelectedCinemaPlace places={selectedPlace} food={selectedFood} selectedSum={selectedSum} handlePay={handlePay} />
           </Box>
         </Box>
       </Box>

@@ -32,7 +32,10 @@
         "default-param-last": "off",
         "no-use-before-define": "off",
         "no-underscore-dangle":"off",
-        "no-shadow": "off"
+        "no-shadow": "off",
+        "react/no-array-index-key": "off",
+        "max-len":"off",
+        "no-plusplus": "off"
 
     }
 }

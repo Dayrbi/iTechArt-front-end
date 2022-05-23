@@ -3,7 +3,7 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import moment from 'moment-timezone';
 import { getCinemasByFilm } from 'redux/actions/cinemas';
 import { getFilmInfo } from 'redux/actions/films';
@@ -15,14 +15,13 @@ export const FilmDescription = () => {
   const classes = useStyles();
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { sessions, date } = useSelector((state) => state.cinemasReducer.cinemas.filmCinemas);
   const [filmData] = useSelector((state) => state.filmsReducer.films.filmInfo);
   const [filmLoadError, setFilLoadError] = useState(false);
   const [errorCinema, setErrorCinema] = useState(false);
   useEffect(() => {
     getFilm();
-  }, [id]);
-  useEffect(() => {
     getSessions();
   }, [id]);
   async function getFilm() {
@@ -41,6 +40,11 @@ export const FilmDescription = () => {
   }
   const handleClose = () => {
     setFilLoadError(false);
+  };
+  const handleSessionClick = (id, time) => {
+    if (id) {
+      navigate(`/checkout/${id}/${time}`);
+    }
   };
   return (
     <div className={classes.mainContainer}>
@@ -108,7 +112,9 @@ export const FilmDescription = () => {
                       time={session.time}
                       price={session.price}
                       cinemas={session.cinemaId}
+                      id={session._id}
                       key={session._id}
+                      handleSessionClick={handleSessionClick}
                     />
                   ) : ''
               ))}

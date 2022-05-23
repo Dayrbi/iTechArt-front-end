@@ -22,11 +22,11 @@ export const BasePage = () => {
   const [errorFilm, setErrorFilm] = useState(false);
   useEffect(() => {
     getUserData();
-  }, []);
-  useEffect(() => () => {
     debouncedChangeHandler.cancel();
   }, []);
-
+  useEffect(() => {
+    getSearchFilms();
+  }, [filmName]);
   async function getUserData() {
     try {
       setIsUser(true);
@@ -45,13 +45,12 @@ export const BasePage = () => {
     }
   }
   const handleChange = (event) => {
-    if (event.target.value) {
+    if (event?.target?.value) {
       setFilmName({ search: event.target.value.trim() });
-      getSearchFilms();
     }
   };
   const debouncedChangeHandler = useCallback(
-    debounce(handleChange, 200),
+    debounce(handleChange, 300),
     [filmName],
   );
   const handleClick = (id) => {

@@ -14,7 +14,7 @@ export const Routing = () => (
     <Route path="/" element={<BasePage />}>
       <Route path="/" element={<MainPage />} exact />
       <Route path="/filmDescription/:id" element={<FilmDescription />} exact />
-      <Route path="/checkout/:id" element={<CheckoutPage />} exact />
+      <Route path="/checkout/:id/:time" element={<CheckoutPage />} exact />
     </Route>
     <Route path="*" element={<Navigate to="/" />} />
   </Routes>

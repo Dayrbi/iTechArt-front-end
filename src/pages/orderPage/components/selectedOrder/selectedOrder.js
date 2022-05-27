@@ -1,10 +1,10 @@
+import React from 'react';
 import {
   Box,
   Card, CardContent, CardMedia, Typography,
 } from '@mui/material';
 import moment from 'moment-timezone';
 import { array, number, string } from 'prop-types';
-import React from 'react';
 
 export const SelectedOrder = ({
   imgSrc, title, cinemaName, city, time, placeArr, foodArr, amount,
@@ -14,7 +14,7 @@ export const SelectedOrder = ({
       component="img"
       height="90"
       image={imgSrc || ''}
-      alt={`${title} image` || 'img'}
+      alt={`${title} image` || 'Film poster img'}
     />
     <CardContent sx={{ mt: 2 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 5 }}>

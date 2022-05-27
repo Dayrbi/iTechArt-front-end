@@ -28,7 +28,7 @@ export const OrderList = ({
       component="img"
       height="90"
       image={imgSrc || ''}
-      alt={`${title} image` || 'img'}
+      alt={`${title} image` || 'Film poster img'}
     />
     <CardActionArea>
       <CardContent sx={{

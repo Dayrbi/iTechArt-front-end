@@ -1,6 +1,8 @@
 import Cookies from 'js-cookie';
 import { api } from 'services/api.servises';
-import { AUTH_USER, CREATE_USER, LOGIN_USER } from './types';
+import {
+  AUTH_USER, CREATE_USER, GET_USER_ORDERS, LOGIN_USER,
+} from './types';
 
 export function registerUser(username, email, password) {
   return async function registerUserThunk(dispatch) {
@@ -31,5 +33,14 @@ export function authUser() {
       throw new Error();
     }
     dispatch({ type: AUTH_USER, payload: responce.data });
+  };
+}
+export function getUserOrder(id) {
+  return async function getUserOrder(dispatch) {
+    const responce = await api.get('/auth/getUser', { params: { id } });
+    if (!responce.data) {
+      throw new Error();
+    }
+    dispatch({ type: GET_USER_ORDERS, payload: responce.data });
   };
 }

@@ -6,6 +6,7 @@ import RegistrationPage from 'pages/registration/RegistrationPage';
 import { BasePage } from 'pages/basic/BasePage';
 import { FilmDescription } from 'pages/filmDescription/FilmDescription';
 import { CheckoutPage } from 'pages/checkoutPage/CheckoutPage';
+import { OrderPage } from 'pages/orderPage/OrderPage';
 
 export const Routing = () => (
   <Routes>
@@ -15,6 +16,7 @@ export const Routing = () => (
       <Route path="/" element={<MainPage />} exact />
       <Route path="/filmDescription/:id" element={<FilmDescription />} exact />
       <Route path="/checkout/:id/:time" element={<CheckoutPage />} exact />
+      <Route path="/my/:id" element={<OrderPage />} exact />
     </Route>
     <Route path="*" element={<Navigate to="/" />} />
   </Routes>

@@ -5,22 +5,27 @@ import {
 } from '@mui/material';
 import moment from 'moment-timezone';
 import {
-  array, func, number, string,
+  array, bool, func, number, string,
 } from 'prop-types';
 
 export const OrderList = ({
-  imgSrc, title, time, cinemaName, city, placeArr, amount, id, handleOrderClick, filmId,
+  imgSrc, title, time, cinemaName, city, placeArr, amount, id, handleOrderClick, filmId, active,
 }) => (
   <Card
     onClick={() => handleOrderClick(id, filmId)}
     sx={{
       display: 'flex',
-      minWidth: '500px',
+      minWidth: { xs: '300px', sm: '450px', md: '500px' },
       maxWidth: '540px',
       boxShadow: '1',
       borderRadius: '8px',
       mb: 2,
       maxHeight: '90px',
+      minHeight: '85px',
+      borderColor: active ? 'primary.light' : 'common.white',
+      borderWidth: '1px',
+      borderStyle: 'solid',
+      width: { xs: '95%', sm: '80%', md: '100%' },
     }}
   >
     <CardMedia
@@ -57,4 +62,5 @@ OrderList.propTypes = {
   id: string,
   handleOrderClick: func,
   filmId: number,
+  active: bool,
 };

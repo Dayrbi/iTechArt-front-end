@@ -173,15 +173,13 @@ export const CheckoutPage = () => {
           The order has not been placed, please try again
         </Alert>
       </Snackbar>
-      <Box sx={{
-        width: '80%', display: 'flex', justifyContent: 'flex-start', mb: 3,
-      }}
+      <Box
+        className={classes.checkoutTitle}
       >
         <Typography variant="customTitleH2">Checkout</Typography>
       </Box>
-      <Box sx={{
-        width: '80%', backgroundColor: 'common.white', boxShadow: '1', borderRadius: '8px',
-      }}
+      <Box
+        className={classes.checkoutContainer}
       >
         <Box sx={{
           width: '100%', display: 'flex', height: '108px', borderRadius: '8px 8px 0 0', backgroundColor: 'background.darkBlue',
@@ -236,17 +234,22 @@ export const CheckoutPage = () => {
               : <Skeleton width={90} sx={{ backgroundColor: 'grey.400' }} />}
           </Box>
         </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Box sx={{ width: '15%' }}>
+        <Box className={classes.checkoutContent}>
+          <Box className={classes.foodContainer}>
             <Box sx={{
               mb: 2, mt: 4, display: 'flex', justifyContent: 'center',
             }}
             >
               <Typography variant="cardTitle">Food</Typography>
             </Box>
-            <Box sx={{
-              display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: 'auto', gap: '16px', placeItems: 'center',
-            }}
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gridTemplateRows: 'auto',
+                gap: '16px',
+                placeItems: 'center',
+              }}
             >
               {sessionData && sessionData.food.map((card) => (
                 <FoodCard
@@ -261,10 +264,7 @@ export const CheckoutPage = () => {
               ))}
             </Box>
           </Box>
-          <Box sx={{
-            width: '50%', ml: 3,
-          }}
-          >
+          <Box className={classes.cinemaContainer}>
             <Box sx={{
               mb: 2, mt: 4, display: 'flex', justifyContent: 'center',
             }}
@@ -272,7 +272,14 @@ export const CheckoutPage = () => {
               <Typography variant="cardTitle">Hall plan</Typography>
             </Box>
             <Box sx={{
-              borderColor: 'grey.300', borderWidth: '0 1px 0 1px', borderStyle: 'solid', my: 3, width: '100%', maxWidth: '750px',
+              borderColor: 'grey.300',
+              borderWidth: '0 1px 0 1px',
+              borderStyle: 'solid',
+              my: 3,
+              width: '100%',
+              maxWidth: { xs: '100%', md: '750px' },
+              overflow: 'scroll',
+              overflowX: 'auto',
             }}
             >
               {
@@ -284,7 +291,7 @@ export const CheckoutPage = () => {
                       display: 'flex', alignItems: 'center', mx: 2,
                     }}
                   >
-                    <Typography variant="body3" sx={{ ml: 2 }}>{rowInd}</Typography>
+                    <Typography variant="body3" sx={{ ml: 2, mr: { xs: 3, sm: 0 } }}>{rowInd}</Typography>
                     <CinemaHall columns={columns} rowIndex={rowInd} handlePlaceClick={handlePlaceClick} />
                     <Typography variant="body3" sx={{ mr: 2 }}>{rowInd}</Typography>
                   </Box>
@@ -294,7 +301,7 @@ export const CheckoutPage = () => {
               <InfoByPlace />
             </Box>
           </Box>
-          <Box sx={{ width: '25%', maxWidth: '320px' }}>
+          <Box className={classes.selectContainer}>
             <Box sx={{
               mb: 2, mt: 4, display: 'flex', justifyContent: 'center',
             }}

@@ -9,7 +9,7 @@ import { array, number, string } from 'prop-types';
 export const SelectedOrder = ({
   imgSrc, title, cinemaName, city, time, placeArr, foodArr, amount,
 }) => (
-  <Card sx={{ boxShadow: 'shadow.1', minWidth: 420, minHeight: '400px' }}>
+  <Card sx={{ boxShadow: 'shadows.1', minWidth: { xs: '300px', sm: '400px' }, minHeight: '400px' }}>
     <CardMedia
       component="img"
       height="90"

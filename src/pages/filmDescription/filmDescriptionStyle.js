@@ -20,4 +20,29 @@ export const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(6),
     marginBottom: theme.spacing(20),
   },
+  cinemaTitle: {
+    width: '65%',
+    justifyContent: 'flex-start',
+    [theme.breakpoints.down('lg')]: {
+      width: '85%',
+    },
+    [theme.breakpoints.down('md')]: {
+      width: '95%',
+    },
+  },
+  cinemaContainer: {
+    width: '65%',
+    display: 'flex',
+    flexDirection: 'column',
+    borderRadius: '8px',
+    marginTop: theme.spacing(2),
+    backgroundColor: theme.palette.common.white,
+    boxShadow: theme.shadows[1],
+    [theme.breakpoints.down('lg')]: {
+      width: '85%',
+    },
+    [theme.breakpoints.down('md')]: {
+      width: '100%',
+    },
+  },
 }));

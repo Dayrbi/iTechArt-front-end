@@ -3,7 +3,7 @@ import React from 'react';
 
 export const InfoByPlace = () => (
   <Box sx={{
-    width: '60%', mt: 3, ml: 8,
+    width: { xs: '100%', sm: '80%', md: '65%' }, mt: 3, ml: 8,
   }}
   >
     <Grid container spacing={1}>

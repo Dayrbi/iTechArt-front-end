@@ -22,6 +22,9 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'space-around',
     alignItems: 'center',
+    [theme.breakpoints.down('md')]: {
+      width: '80%',
+    },
   },
   searchInput: {
     width: '50%',
@@ -42,6 +45,10 @@ export const useStyles = makeStyles((theme) => ({
     height: '60%',
     display: 'flex',
     alignItems: 'center',
+    [theme.breakpoints.down('md')]: {
+      width: '15%',
+      justifyContent: 'center',
+    },
   },
   logButton: {
     marginRight: theme.spacing(3),

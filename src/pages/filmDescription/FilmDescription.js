@@ -89,13 +89,11 @@ export const FilmDescription = () => {
           )}
       </section>
       <section className={classes.cinemaSection}>
-        <Box sx={{ width: '65%', justifyContent: 'flex-start' }}>
+        <Box className={classes.cinemaTitle}>
           <Typography variant="h2">Watch in Cinema</Typography>
         </Box>
         <Box
-          sx={{
-            width: '65%', display: 'flex', flexDirection: 'column', borderRadius: '8px', mt: 2, backgroundColor: 'common.white', boxShadow: '1',
-          }}
+          className={classes.cinemaContainer}
         >
           {date && date.map((dateEl) => (
             <Box key={dateEl}>

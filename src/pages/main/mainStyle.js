@@ -23,12 +23,26 @@ export const useStyles = makeStyles((theme) => ({
     width: '65%',
     display: 'flex',
     justifyContent: 'flex-start',
+    [theme.breakpoints.down('lg')]: {
+      width: '80%',
+      marginTop: theme.spacing(2),
+    },
+    [theme.breakpoints.down('sm')]: {
+      marginTop: theme.spacing(4),
+      width: '95%',
+    },
   },
   navBar: {
     width: '65%',
     borderColor: theme.palette.grey.main,
     borderTop: '1px solid',
     borderBottom: '1px solid',
+    [theme.breakpoints.down('lg')]: {
+      width: '80%',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '95%',
+    },
   },
   LinkButton: {
     margin: theme.spacing(1),
@@ -39,6 +53,11 @@ export const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-start',
     width: '50%',
     minWidth: '450px',
+    maxWidth: '550px',
+    [theme.breakpoints.down('sm')]: {
+      minWidth: 300,
+      width: '60%',
+    },
   },
   filterBox: {
     display: 'flex',
@@ -46,15 +65,37 @@ export const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     flexBasis: 1,
     marginRight: theme.spacing(3),
+    [theme.breakpoints.down('sm')]: {
+      width: '25%',
+      marginLeft: theme.spacing(2),
+    },
   },
   selectInput: {
     backgroundColor: theme.palette.common.white,
     boxShadow: theme.shadows[1],
+    maxWidth: '160px',
+    [theme.breakpoints.down('sm')]: {
+      width: '100px',
+      height: '50px',
+    },
+  },
+  timePickerTitle: {
+    minWidth: '110px',
   },
   sliderSection: {
     display: 'flex',
     justifyContent: 'center',
     marginTop: theme.spacing(5),
+    [theme.breakpoints.down('lg')]: {
+      width: '90%',
+    },
+    [theme.breakpoints.down('md')]: {
+      width: '89%',
+      marginLeft: theme.spacing(3),
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '89%',
+    },
   },
   cinemaSection: {
     display: 'flex',
@@ -67,5 +108,14 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
+  },
+  widthContainer: {
+    width: '65%',
+    [theme.breakpoints.down('lg')]: {
+      width: '80%',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
   },
 }));

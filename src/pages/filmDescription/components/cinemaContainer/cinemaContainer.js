@@ -1,5 +1,7 @@
 import React from 'react';
-import { array, func, number } from 'prop-types';
+import {
+  array, func, number, string,
+} from 'prop-types';
 import moment from 'moment-timezone';
 import {
   Typography,
@@ -31,10 +33,15 @@ export const CinemaContainer = ({
         </Box>
       ))
     }
-    <Box variant="contained" sx={{ flex: 1, maxWidth: '700px' }}>
+    <Box
+      variant="contained"
+      sx={{
+        flex: 1, maxWidth: '700px', display: 'flex', justifyContent: { sm: 'center', md: 'flex-start' },
+      }}
+    >
       <Box
         sx={{
-          mt: 3, ml: 1, display: 'flex', justifyContent: 'space-between',
+          mt: 3, ml: 1, display: 'flex',
         }}
       >
         <Box sx={{ maxWidth: '320px', width: '100%', display: 'flex' }}>
@@ -67,6 +74,6 @@ CinemaContainer.propTypes = {
   time: array,
   price: number,
   cinemas: array,
-  id: number,
+  id: string,
   handleSessionClick: func,
 };

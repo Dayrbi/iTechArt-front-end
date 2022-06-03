@@ -48,18 +48,28 @@ const settings = {
       },
     },
     {
-      breakpoint: 1024,
+      breakpoint: 900,
       settings: {
         slidesToShow: 2,
         slidesToScroll: 1,
         dots: false,
+        initialSlide: 2,
       },
     },
     {
-      breakpoint: 720,
+      breakpoint: 620,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 1,
+        dots: false,
+        arrow: false,
+      },
+    },
+    {
+      breakpoint: 400,
       settings: {
         slidesToShow: 1,
-        slidesToScroll: 1,
+        slidesToScroll: 2,
         dots: false,
         arrow: false,
         centerMode: true,
@@ -174,7 +184,7 @@ export const MainPage = () => {
             fantasy
           </Link>
         </nav>
-        <div style={{ width: '65%' }}>
+        <div className={classes.widthContainer}>
           <div className={classes.selectContainer}>
             <div className={classes.filterBox}>
               <h3>City</h3>
@@ -208,7 +218,7 @@ export const MainPage = () => {
               </FormControl>
             </div>
             <div className={classes.filterBox}>
-              <h3>Date and time</h3>
+              <h3 className={classes.timePickerTitle}>Date</h3>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
                   className={classes.selectInput}
@@ -226,7 +236,7 @@ export const MainPage = () => {
         </div>
       </section>
       <section className={classes.sliderSection}>
-        <main style={{ width: '65%' }}>
+        <main className={classes.widthContainer}>
           <h2>Popular</h2>
           <Slider {...settings}>
             {
@@ -247,9 +257,11 @@ export const MainPage = () => {
         <div className={classes.movieTitleContainer}>
           <h1 className={classes.mainTitle}>Cinemas</h1>
         </div>
-        <Box sx={{
-          width: '65%', borderRadius: '10px', backgroundColor: 'common.white', boxShadow: '1',
-        }}
+        <Box
+          sx={{
+            width: '65%', borderRadius: '10px', backgroundColor: 'common.white', boxShadow: '1',
+          }}
+          className={classes.widthContainer}
         >
           {
             dateArr && dateArr.date.map((date) => (

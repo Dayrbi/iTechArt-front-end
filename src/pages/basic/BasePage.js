@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  Autocomplete, TextField, Button, Avatar, Typography, Menu, MenuItem, ListItemIcon, Tooltip, IconButton,
+  Autocomplete, TextField, Button, Avatar, Typography, Menu, MenuItem, ListItemIcon, Tooltip, IconButton, Box,
 } from '@mui/material';
 import debounce from 'lodash.debounce';
 import Cookies from 'js-cookie';
@@ -9,7 +9,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useQueryParams, withDefault, StringParam } from 'use-query-params';
 import { authUser } from 'redux/actions/user';
 import { getFilmsForSearch } from 'redux/actions/films';
-import { Logout, Person } from '@mui/icons-material';
+import {
+  Close, Logout, Person, Search,
+} from '@mui/icons-material';
 import { useStyles } from './baseStyle';
 import { SearchItem } from './components/searchItem/searchItem';
 
@@ -23,6 +25,7 @@ export const BasePage = () => {
   const [filmName, setFilmName] = useQueryParams({ search: withDefault(StringParam, '') });
   const [errorFilm, setErrorFilm] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [openSearch, setOpenSearch] = useState(false);
   const menuOpen = Boolean(anchorEl);
   useEffect(() => {
     getUserData();
@@ -75,6 +78,12 @@ export const BasePage = () => {
     Cookies.remove('token');
     navigate('/login');
   };
+  const handleSearchOpen = () => {
+    setOpenSearch(true);
+  };
+  const handleSearchClose = () => {
+    setOpenSearch(false);
+  };
   return (
     <div className={classes.mainContainer}>
       <header className={classes.appBar}>
@@ -108,6 +117,40 @@ export const BasePage = () => {
             renderInput={(params) => <TextField {...params} placeholder="Search..." />}
           />
         </div>
+        <Box className={classes.responsiveSearchContainer} sx={{ height: openSearch ? '180px' : 0 }}>
+          <Box sx={{ width: '70%' }}>
+            <Autocomplete
+              className={classes.responsiveSearch}
+              freeSolo
+              value={filmName.search}
+              loading={!!filmSearchData}
+              loadingText={errorFilm ? 'Nothing found for your request' : 'Loading...'}
+              onInputChange={debouncedChangeHandler}
+              options={filmSearchData}
+              getOptionLabel={(option) => {
+                if (typeof option === 'string') {
+                  return option;
+                }
+                if (option.inputValue) {
+                  return option.inputValue;
+                }
+                return option.title;
+              }}
+              renderOption={(props, option) => (
+                <SearchItem
+                  {...props}
+                  option={option}
+                  key={option.id}
+                  handleClick={() => handleClick(option.id)}
+                />
+              )}
+              renderInput={(params) => <TextField {...params} placeholder="Search..." />}
+            />
+          </Box>
+          <IconButton onClick={handleSearchClose} sx={{ color: 'common.white', height: 100 }}>
+            <Close />
+          </IconButton>
+        </Box>
         {isUser ? (
           <div className={classes.butContainer}>
             <Typography sx={{ mr: 2, display: { xs: 'none', sm: 'none', md: 'flex' } }} color="common.white" variant="body2">{userData.username}</Typography>
@@ -152,6 +195,9 @@ export const BasePage = () => {
           </div>
         ) : (
           <div className={classes.butContainer}>
+            <IconButton onClick={handleSearchOpen} className={classes.searchIconBut}>
+              <Search />
+            </IconButton>
             <Button
               className={classes.logButton}
               variant="text"

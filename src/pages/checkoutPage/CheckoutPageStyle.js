@@ -100,4 +100,11 @@ export const useStyles = makeStyles((theme) => ({
       marginTop: theme.spacing(10),
     },
   },
+  loaderContainer: {
+    display: 'flex',
+    width: '100%',
+    height: 300,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 }));

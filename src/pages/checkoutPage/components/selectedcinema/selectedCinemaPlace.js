@@ -1,11 +1,12 @@
+import { LoadingButton } from '@mui/lab';
 import {
-  Box, Button, Card, Typography,
+  Box, Card, Typography,
 } from '@mui/material';
-import { array, func } from 'prop-types';
+import { array, bool, func } from 'prop-types';
 import React from 'react';
 
 export const SelectedCinemaPlace = ({
-  places, food, selectedSum, handlePay,
+  places, food, selectedSum, handlePay, loader,
 }) => (
   <Box>
     <Box sx={{
@@ -54,7 +55,14 @@ export const SelectedCinemaPlace = ({
         <Typography variant="body1">Summary:</Typography>
         <Typography variant="body1">{`$${selectedSum()}`}</Typography>
       </Box>
-      <Button variant="contained" onClick={handlePay} sx={{ backgroundColor: 'button.purple', width: '90%', height: '48px' }}>Purchase</Button>
+      <LoadingButton
+        loading={loader}
+        variant="contained"
+        onClick={handlePay}
+        sx={{ backgroundColor: 'button.purple', width: '90%', height: '48px' }}
+      >
+        Purchase
+      </LoadingButton>
     </Box>
   </Box>
 );
@@ -63,4 +71,5 @@ SelectedCinemaPlace.propTypes = {
   food: array,
   selectedSum: func,
   handlePay: func,
+  loader: bool,
 };

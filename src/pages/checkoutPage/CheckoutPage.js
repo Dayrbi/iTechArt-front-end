@@ -1,6 +1,6 @@
 import {
   Alert,
-  Box, Skeleton, Snackbar, Typography,
+  Box, CircularProgress, Skeleton, Snackbar, Typography,
 } from '@mui/material';
 import moment from 'moment-timezone';
 import React, { useEffect, useReducer, useState } from 'react';
@@ -28,6 +28,9 @@ export const CheckoutPage = () => {
   const [selectedFood, setSelectedFood] = useState([]);
   const [userExist, setUserExist] = useState(true);
   const [IsBuyError, setIsBuyError] = useState(true);
+  const [foodLoader, setFoodLoader] = useState(false);
+  const [hallPlanLoader, setHallPlanLoader] = useState(false);
+  const [createOrderLoader, setCreateOrderLoader] = useState(false);
   const [foodState, dispatchFood] = useReducer(foodReducer, { food: {} });
   useEffect(() => {
     getSession();
@@ -38,7 +41,11 @@ export const CheckoutPage = () => {
   }, [sessionData]);
   async function getSession() {
     try {
-      dispatch(getCinemasForCheckout(id, time));
+      setFoodLoader(true);
+      setHallPlanLoader(true);
+      await dispatch(getCinemasForCheckout(id, time));
+      setFoodLoader(false);
+      setHallPlanLoader(false);
     } catch (e) {
       setSessionError(true);
     }
@@ -54,9 +61,12 @@ export const CheckoutPage = () => {
     try {
       const [cinemaHallArr] = sessionData.cinemaHall;
       const { cinemaHall } = cinemaHallArr;
-      dispatch(updateCinemaHall(id, cinemaHall, time));
+      setHallPlanLoader(true);
+      await dispatch(updateCinemaHall(id, cinemaHall, time));
+      setHallPlanLoader(false);
     } catch (e) {
       setIsBuyError(false);
+      setHallPlanLoader(false);
     }
   }
   async function addNewOrder(cinemaName, city) {
@@ -64,9 +74,12 @@ export const CheckoutPage = () => {
       const { filmId, date } = sessionData;
       const { img, title } = filmsArr;
       const amount = selectedSum();
-      dispatch(createOrder(selectedPlace, selectedFood, filmId, amount, time, date, cinemaName, city, img, title, userId));
+      setCreateOrderLoader(true);
+      await dispatch(createOrder(selectedPlace, selectedFood, filmId, amount, time, date, cinemaName, city, img, title, userId));
+      setCreateOrderLoader(false);
     } catch (e) {
       setIsBuyError(false);
+      setCreateOrderLoader(false);
     }
   }
   function createInitialState() {
@@ -102,6 +115,14 @@ export const CheckoutPage = () => {
           setSelectedPlace([...selectedPlace, placeInfo]);
         }
       }
+    } else {
+      for (let i = 0; i < sessionData.cinemaHall.length; i++) {
+        sessionData.cinemaHall[i].cinemaHall[row][column].selected = false;
+        const deleteIndex = selectedPlace.findIndex((place) => place.seat === column && place.row === row + 1);
+        const selectedPlaceCopy = [...selectedPlace];
+        selectedPlaceCopy.splice(deleteIndex, 1);
+        setSelectedPlace(selectedPlaceCopy);
+      }
     }
   };
   const handleAddFood = (title, price) => {
@@ -128,7 +149,9 @@ export const CheckoutPage = () => {
     return placeSum + foodSum;
   };
   const handlePay = () => {
-    if (sessionData.cinemaId) {
+    if (!userId) {
+      setUserExist(false);
+    } else if (sessionData.cinemaId) {
       const [cinema] = sessionData.cinemaId;
       const [cinemaHall] = sessionData.cinemaHall;
       for (let i = 0; i < selectedPlace.length; i++) {
@@ -140,8 +163,6 @@ export const CheckoutPage = () => {
       addNewOrder(title, city);
       setSelectedFood([]);
       setSelectedPlace([]);
-    } else {
-      setUserExist(false);
     }
   };
   const userAlertClose = () => {
@@ -242,27 +263,35 @@ export const CheckoutPage = () => {
             >
               <Typography variant="cardTitle">Food</Typography>
             </Box>
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gridTemplateRows: 'auto',
-                gap: '16px',
-                placeItems: 'center',
-              }}
-            >
-              {sessionData && sessionData.food.map((card) => (
-                <FoodCard
-                  img={card.img}
-                  title={card.title}
-                  price={card.price}
-                  key={card.title}
-                  handleAddFood={handleAddFood}
-                  handleRemoveFood={handleRemoveFood}
-                  foodState={foodState.food}
-                />
-              ))}
-            </Box>
+            {!foodLoader
+              ? (
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gridTemplateRows: 'auto',
+                    gap: '16px',
+                    placeItems: 'center',
+                  }}
+                >
+                  {sessionData && sessionData.food.map((card) => (
+                    <FoodCard
+                      img={card.img}
+                      title={card.title}
+                      price={card.price}
+                      key={card.title}
+                      handleAddFood={handleAddFood}
+                      handleRemoveFood={handleRemoveFood}
+                      foodState={foodState.food}
+                    />
+                  ))}
+                </Box>
+              )
+              : (
+                <Box className={classes.loaderContainer}>
+                  <CircularProgress width={60} height={60} color="secondary" />
+                </Box>
+              )}
           </Box>
           <Box className={classes.cinemaContainer}>
             <Box sx={{
@@ -283,7 +312,7 @@ export const CheckoutPage = () => {
             }}
             >
               {
-              sessionData && sessionData.cinemaHall.map((hall) => (
+              !hallPlanLoader ? sessionData && sessionData.cinemaHall.map((hall) => (
                 hall.cinemaHall.map((columns, rowInd) => (
                   <Box
                     key={rowInd}
@@ -297,6 +326,11 @@ export const CheckoutPage = () => {
                   </Box>
                 ))
               ))
+                : (
+                  <Box className={classes.loaderContainer}>
+                    <CircularProgress width={60} height={60} />
+                  </Box>
+                )
             }
               <InfoByPlace />
             </Box>
@@ -308,7 +342,13 @@ export const CheckoutPage = () => {
             >
               <Typography variant="cardTitle">Selected</Typography>
             </Box>
-            <SelectedCinemaPlace places={selectedPlace} food={selectedFood} selectedSum={selectedSum} handlePay={handlePay} />
+            <SelectedCinemaPlace
+              places={selectedPlace}
+              food={selectedFood}
+              selectedSum={selectedSum}
+              handlePay={handlePay}
+              loader={createOrderLoader}
+            />
           </Box>
         </Box>
       </Box>

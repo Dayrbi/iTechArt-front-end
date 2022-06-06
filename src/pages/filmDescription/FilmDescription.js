@@ -1,5 +1,5 @@
 import {
-  Box, Skeleton, Snackbar, Alert, Typography,
+  Box, Skeleton, Snackbar, Alert, Typography, CircularProgress,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,6 +20,7 @@ export const FilmDescription = () => {
   const [filmData] = useSelector((state) => state.filmsReducer.films.filmInfo);
   const [filmLoadError, setFilLoadError] = useState(false);
   const [errorCinema, setErrorCinema] = useState(false);
+  const [cinemaLoader, setCinemaLoader] = useState(false);
   useEffect(() => {
     getFilm();
     getSessions();
@@ -33,7 +34,9 @@ export const FilmDescription = () => {
   }
   async function getSessions() {
     try {
+      setCinemaLoader(true);
       await dispatch(getCinemasByFilm(id));
+      setCinemaLoader(false);
     } catch (e) {
       setErrorCinema(true);
     }
@@ -71,10 +74,17 @@ export const FilmDescription = () => {
             <Box sx={{ width: '65%' }}>
               <Skeleton width={160} sx={{ mt: 4 }} />
               <Box sx={{
-                width: '100%', display: 'flex', justifyContent: 'flex-start', borderRadius: '8px', mt: 2, backgroundColor: 'common.white', boxShadow: '1',
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'flex-start',
+                flexDirection: { md: 'column', lg: 'row' },
+                borderRadius: '8px',
+                mt: 2,
+                backgroundColor: 'common.white',
+                boxShadow: '1',
               }}
               >
-                <Skeleton variant="rectangle" width={500} height={600} />
+                <Skeleton variant="rectangle" sx={{ width: { sx: '100%', lg: 500 } }} height={600} />
                 <Box sx={{ width: '35%', ml: 7, mt: 6 }}>
                   <Skeleton width={130} />
                   <Skeleton sx={{ mt: 4 }} width={160} />
@@ -95,7 +105,7 @@ export const FilmDescription = () => {
         <Box
           className={classes.cinemaContainer}
         >
-          {date && date.map((dateEl) => (
+          {!cinemaLoader ? date && date.map((dateEl) => (
             <Box key={dateEl}>
               <Box sx={{
                 width: '100%', height: '50px', backgroundColor: 'grey.300', alignItems: 'center', display: 'flex', borderRadius: '10px 10px 0 0',
@@ -118,7 +128,12 @@ export const FilmDescription = () => {
               ))}
 
             </Box>
-          ))}
+          ))
+            : (
+              <Box className={classes.loaderContainer}>
+                <CircularProgress width={60} height={60} color="secondary" />
+              </Box>
+            )}
         </Box>
       </section>
     </div>

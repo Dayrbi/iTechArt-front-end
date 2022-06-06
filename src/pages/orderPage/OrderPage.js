@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import {
+  Box, CircularProgress, Skeleton, Typography,
+} from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserOrder } from 'redux/actions/user';
 import { useParams } from 'react-router-dom';
@@ -17,12 +19,15 @@ export const OrderPage = () => {
   const [orderError, setOrderError] = useState(false);
   const [orderInfoError, setOrderInfoError] = useState(false);
   const [selectOrder, setSelectOrder] = useState(null);
+  const [ordersListLoader, setOrderListLoader] = useState(false);
   useEffect(() => {
     getOrders();
   }, []);
   async function getOrders() {
     try {
+      setOrderListLoader(true);
       await dispatch(getUserOrder(id));
+      setOrderListLoader(false);
     } catch (e) {
       setOrderError(true);
     }
@@ -42,13 +47,23 @@ export const OrderPage = () => {
       </Box>
       <Box className={classes.orderContent}>
         <Box className={classes.orderListContainer}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', mb: 6 }}>
-            <Typography variant="cardTitle" sx={{ fontWeight: 500 }}>{`Hello, ${userOrdersArr ? userOrdersArr.username : 'invalid User'}`}</Typography>
-            <Typography variant="body2" color="text.secondary">{userOrdersArr ? userOrdersArr.email : 'invalid email'}</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'column', overflowY: 'scroll' }}>
+          {userOrdersArr.username ? (
+            <Box sx={{ display: 'flex', flexDirection: 'column', mb: 6 }}>
+              <Typography variant="cardTitle" sx={{ fontWeight: 500 }}>{`Hello, ${userOrdersArr ? userOrdersArr.username : 'invalid User'}`}</Typography>
+              <Typography variant="body2" color="text.secondary">{userOrdersArr ? userOrdersArr.email : 'invalid email'}</Typography>
+            </Box>
+          ) : (
+            <Box sx={{ display: 'flex', flexDirection: 'column', mb: 6 }}>
+              <Skeleton sx={{ mt: 2 }} width={150} />
+              <Skeleton sx={{ mt: 2 }} width={150} />
+            </Box>
+          )}
+          <Box sx={{
+            display: 'flex', flexDirection: 'column', overflowY: 'scroll', overflowX: 'hidden',
+          }}
+          >
             <Typography variant="bodyLato3" sx={{ mb: 2 }}>My orders history</Typography>
-            {userOrdersArr && !orderError ? userOrdersArr.orders && userOrdersArr.orders.map((order) => (
+            {!ordersListLoader ? orderError && userOrdersArr.orders && userOrdersArr.orders.map((order) => (
               <OrderList
                 title={order.filmTitle}
                 cinemaName={order.cinemaName}
@@ -64,8 +79,8 @@ export const OrderPage = () => {
                 handleOrderClick={handleOrderClick}
               />
             )) : (
-              <Box sx={{ width: '500px', height: '300px' }}>
-                <Typography variant="cardTitle" color="text.secondary">You dont have orders</Typography>
+              <Box className={classes.loaderContainer}>
+                <CircularProgress width={60} height={60} />
               </Box>
             )}
           </Box>

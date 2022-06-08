@@ -28,9 +28,9 @@ export const CheckoutPage = () => {
   const [selectedFood, setSelectedFood] = useState([]);
   const [userExist, setUserExist] = useState(true);
   const [IsBuyError, setIsBuyError] = useState(true);
-  const [foodLoader, setFoodLoader] = useState(false);
-  const [hallPlanLoader, setHallPlanLoader] = useState(false);
-  const [createOrderLoader, setCreateOrderLoader] = useState(false);
+  const [foodLoading, setFoodLoading] = useState(false);
+  const [hallPlanLoading, setHallPlanLoading] = useState(false);
+  const [createOrderLoading, setCreateOrderLoading] = useState(false);
   const [foodState, dispatchFood] = useReducer(foodReducer, { food: {} });
   useEffect(() => {
     getSession();
@@ -41,11 +41,11 @@ export const CheckoutPage = () => {
   }, [sessionData]);
   async function getSession() {
     try {
-      setFoodLoader(true);
-      setHallPlanLoader(true);
+      setFoodLoading(true);
+      setHallPlanLoading(true);
       await dispatch(getCinemasForCheckout(id, time));
-      setFoodLoader(false);
-      setHallPlanLoader(false);
+      setFoodLoading(false);
+      setHallPlanLoading(false);
     } catch (e) {
       setSessionError(true);
     }
@@ -61,12 +61,12 @@ export const CheckoutPage = () => {
     try {
       const [cinemaHallArr] = sessionData.cinemaHall;
       const { cinemaHall } = cinemaHallArr;
-      setHallPlanLoader(true);
+      setHallPlanLoading(true);
       await dispatch(updateCinemaHall(id, cinemaHall, time));
-      setHallPlanLoader(false);
+      setHallPlanLoading(false);
     } catch (e) {
       setIsBuyError(false);
-      setHallPlanLoader(false);
+      setHallPlanLoading(false);
     }
   }
   async function addNewOrder(cinemaName, city) {
@@ -74,12 +74,12 @@ export const CheckoutPage = () => {
       const { filmId, date } = sessionData;
       const { img, title } = filmsArr;
       const amount = selectedSum();
-      setCreateOrderLoader(true);
+      setCreateOrderLoading(true);
       await dispatch(createOrder(selectedPlace, selectedFood, filmId, amount, time, date, cinemaName, city, img, title, userId));
-      setCreateOrderLoader(false);
+      setCreateOrderLoading(false);
     } catch (e) {
       setIsBuyError(false);
-      setCreateOrderLoader(false);
+      setCreateOrderLoading(false);
     }
   }
   function createInitialState() {
@@ -263,7 +263,7 @@ export const CheckoutPage = () => {
             >
               <Typography variant="cardTitle">Food</Typography>
             </Box>
-            {!foodLoader
+            {!foodLoading
               ? (
                 <Box
                   sx={{
@@ -312,7 +312,7 @@ export const CheckoutPage = () => {
             }}
             >
               {
-              !hallPlanLoader ? sessionData && sessionData.cinemaHall.map((hall) => (
+              !hallPlanLoading ? sessionData && sessionData.cinemaHall.map((hall) => (
                 hall.cinemaHall.map((columns, rowInd) => (
                   <Box
                     key={rowInd}
@@ -347,7 +347,7 @@ export const CheckoutPage = () => {
               food={selectedFood}
               selectedSum={selectedSum}
               handlePay={handlePay}
-              loader={createOrderLoader}
+              loader={createOrderLoading}
             />
           </Box>
         </Box>

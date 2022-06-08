@@ -24,8 +24,8 @@ export const BasePage = () => {
   const [isUser, setIsUser] = useState(false);
   const [filmName, setFilmName] = useQueryParams({ search: withDefault(StringParam, '') });
   const [errorFilm, setErrorFilm] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [openSearch, setOpenSearch] = useState(false);
+  const [anchorEl, isMenuOpen] = useState(null);
+  const [openSearch, isSearchOpen] = useState(false);
   const menuOpen = Boolean(anchorEl);
   useEffect(() => {
     getUserData();
@@ -66,10 +66,10 @@ export const BasePage = () => {
     }
   };
   const handleMenuClose = () => {
-    setAnchorEl(null);
+    isMenuOpen(null);
   };
   const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
+    isMenuOpen(event.currentTarget);
   };
   const handleAccountClick = () => {
     navigate(`/my/${userData.id}`);
@@ -79,10 +79,10 @@ export const BasePage = () => {
     navigate('/login');
   };
   const handleSearchOpen = () => {
-    setOpenSearch(true);
+    isSearchOpen(true);
   };
   const handleSearchClose = () => {
-    setOpenSearch(false);
+    isSearchOpen(false);
   };
   return (
     <div className={classes.mainContainer}>
@@ -153,6 +153,9 @@ export const BasePage = () => {
         </Box>
         {isUser ? (
           <div className={classes.butContainer}>
+            <IconButton onClick={handleSearchOpen} className={classes.searchIconBut}>
+              <Search />
+            </IconButton>
             <Typography sx={{ mr: 2, display: { xs: 'none', sm: 'none', md: 'flex' } }} color="common.white" variant="body2">{userData.username}</Typography>
             <Tooltip title="Account settings">
               <IconButton

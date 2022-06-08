@@ -84,8 +84,8 @@ export const MainPage = () => {
   const [errorFilm, setErrorFilm] = useState(false);
   const [errorCinema, setErrorCinema] = useState(false);
   const [errorFilter, setErrorFilter] = useState(false);
-  const [sliderLoader, setSliderLoader] = useState(false);
-  const [cinemaLoader, setCinemaLoader] = useState(false);
+  const [sliderLoading, setSliderLoading] = useState(false);
+  const [cinemaLoading, setCinemaLoading] = useState(false);
   const [filterOptions, setFilterOptions] = useQueryParams({
     theatre: withDefault(StringParam, ''),
     city: withDefault(StringParam, ''),
@@ -116,9 +116,9 @@ export const MainPage = () => {
 
   async function getFilms() {
     try {
-      setSliderLoader(true);
+      setSliderLoading(true);
       await dispatch(getPopularFilms());
-      setSliderLoader(false);
+      setSliderLoading(false);
     } catch (e) {
       setErrorFilm(true);
     }
@@ -126,9 +126,9 @@ export const MainPage = () => {
   async function getFilterCinemas() {
     try {
       const { theatre, city, date } = filterOptions;
-      setCinemaLoader(true);
+      setCinemaLoading(true);
       await dispatch(getCinemasByFilter(theatre, city, date));
-      setCinemaLoader(false);
+      setCinemaLoading(false);
     } catch (e) {
       setErrorCinema(true);
     }
@@ -244,7 +244,7 @@ export const MainPage = () => {
       <section className={classes.sliderSection}>
         <main className={classes.widthContainer}>
           <h2>Popular</h2>
-          {!sliderLoader
+          {!sliderLoading
             ? (
               <Slider {...settings}>
                 {
@@ -277,7 +277,7 @@ export const MainPage = () => {
           }}
           className={classes.widthContainer}
         >
-          { !cinemaLoader
+          { !cinemaLoading
             ? dateArr && dateArr.date.map((date) => (
               <div className={classes.cinemaContainer} key={date}>
                 <Box sx={{

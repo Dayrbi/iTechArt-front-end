@@ -18,23 +18,23 @@ export const OrderPage = () => {
   const orderInfo = useSelector((state) => state.ordersReducer.order);
   const [orderError, setOrderError] = useState(false);
   const [orderInfoError, setOrderInfoError] = useState(false);
-  const [selectOrder, setSelectOrder] = useState(null);
-  const [ordersListLoader, setOrderListLoader] = useState(false);
+  const [selectedOrder, selectOrder] = useState(null);
+  const [ordersListLoading, setOrderListLoading] = useState(false);
   useEffect(() => {
     getOrders();
   }, []);
   async function getOrders() {
     try {
-      setOrderListLoader(true);
+      setOrderListLoading(true);
       await dispatch(getUserOrder(id));
-      setOrderListLoader(false);
+      setOrderListLoading(false);
     } catch (e) {
       setOrderError(true);
     }
   }
   const handleOrderClick = async (id, filmId) => {
     try {
-      setSelectOrder(id);
+      selectOrder(id);
       await dispatch(getOneOrder(id, filmId));
     } catch (e) {
       setOrderInfoError(true);
@@ -63,7 +63,7 @@ export const OrderPage = () => {
           }}
           >
             <Typography variant="bodyLato3" sx={{ mb: 2 }}>My orders history</Typography>
-            {!ordersListLoader ? orderError && userOrdersArr.orders && userOrdersArr.orders.map((order) => (
+            {!ordersListLoading ? !orderError && userOrdersArr.orders && userOrdersArr.orders.map((order) => (
               <OrderList
                 title={order.filmTitle}
                 cinemaName={order.cinemaName}
@@ -75,11 +75,11 @@ export const OrderPage = () => {
                 id={order._id}
                 key={order._id}
                 filmId={order.filmId}
-                active={selectOrder === order._id}
+                active={selectedOrder === order._id}
                 handleOrderClick={handleOrderClick}
               />
             )) : (
-              <Box className={classes.loaderContainer}>
+              <Box className={classes.loaderContainer} sx={{ minWidth: 300 }}>
                 <CircularProgress width={60} height={60} />
               </Box>
             )}

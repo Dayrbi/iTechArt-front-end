@@ -27,17 +27,17 @@ export const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isError, setIsError] = useState(false);
-  const [loadingLogin, setLoadinglogin] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
   const authUser = async (formValue) => {
     try {
       const { email, password } = formValue;
-      setLoadinglogin(true);
+      setLoginLoading(true);
       await dispatch(loginUser(email, password));
-      setLoadinglogin(false);
+      setLoginLoading(false);
       navigate('/');
     } catch (e) {
       setIsError(true);
-      setLoadinglogin(false);
+      setLoginLoading(false);
     }
   };
   const handleClose = () => {
@@ -99,7 +99,7 @@ export const LoginPage = () => {
                 sx={{ backgroundColor: 'button.purple', mt: '10%' }}
                 className={classes.formButtom}
                 type="submit"
-                loading={loadingLogin}
+                loading={loginLoading}
               >
                 Log In
               </LoadingButton>

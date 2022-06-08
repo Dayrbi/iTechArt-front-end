@@ -1,6 +1,6 @@
 import {
   Alert,
-  Box, Skeleton, Snackbar, Typography,
+  Box, CircularProgress, Skeleton, Snackbar, Typography,
 } from '@mui/material';
 import moment from 'moment-timezone';
 import React, { useEffect, useReducer, useState } from 'react';
@@ -28,6 +28,9 @@ export const CheckoutPage = () => {
   const [selectedFood, setSelectedFood] = useState([]);
   const [userExist, setUserExist] = useState(true);
   const [IsBuyError, setIsBuyError] = useState(true);
+  const [foodLoading, setFoodLoading] = useState(false);
+  const [hallPlanLoading, setHallPlanLoading] = useState(false);
+  const [createOrderLoading, setCreateOrderLoading] = useState(false);
   const [foodState, dispatchFood] = useReducer(foodReducer, { food: {} });
   useEffect(() => {
     getSession();
@@ -38,7 +41,11 @@ export const CheckoutPage = () => {
   }, [sessionData]);
   async function getSession() {
     try {
-      dispatch(getCinemasForCheckout(id, time));
+      setFoodLoading(true);
+      setHallPlanLoading(true);
+      await dispatch(getCinemasForCheckout(id, time));
+      setFoodLoading(false);
+      setHallPlanLoading(false);
     } catch (e) {
       setSessionError(true);
     }
@@ -54,9 +61,12 @@ export const CheckoutPage = () => {
     try {
       const [cinemaHallArr] = sessionData.cinemaHall;
       const { cinemaHall } = cinemaHallArr;
-      dispatch(updateCinemaHall(id, cinemaHall, time));
+      setHallPlanLoading(true);
+      await dispatch(updateCinemaHall(id, cinemaHall, time));
+      setHallPlanLoading(false);
     } catch (e) {
       setIsBuyError(false);
+      setHallPlanLoading(false);
     }
   }
   async function addNewOrder(cinemaName, city) {
@@ -64,9 +74,12 @@ export const CheckoutPage = () => {
       const { filmId, date } = sessionData;
       const { img, title } = filmsArr;
       const amount = selectedSum();
-      dispatch(createOrder(selectedPlace, selectedFood, filmId, amount, time, date, cinemaName, city, img, title, userId));
+      setCreateOrderLoading(true);
+      await dispatch(createOrder(selectedPlace, selectedFood, filmId, amount, time, date, cinemaName, city, img, title, userId));
+      setCreateOrderLoading(false);
     } catch (e) {
       setIsBuyError(false);
+      setCreateOrderLoading(false);
     }
   }
   function createInitialState() {
@@ -102,6 +115,14 @@ export const CheckoutPage = () => {
           setSelectedPlace([...selectedPlace, placeInfo]);
         }
       }
+    } else {
+      for (let i = 0; i < sessionData.cinemaHall.length; i++) {
+        sessionData.cinemaHall[i].cinemaHall[row][column].selected = false;
+        const deleteIndex = selectedPlace.findIndex((place) => place.seat === column && place.row === row + 1);
+        const selectedPlaceCopy = [...selectedPlace];
+        selectedPlaceCopy.splice(deleteIndex, 1);
+        setSelectedPlace(selectedPlaceCopy);
+      }
     }
   };
   const handleAddFood = (title, price) => {
@@ -128,7 +149,9 @@ export const CheckoutPage = () => {
     return placeSum + foodSum;
   };
   const handlePay = () => {
-    if (sessionData.cinemaId) {
+    if (!userId) {
+      setUserExist(false);
+    } else if (sessionData.cinemaId) {
       const [cinema] = sessionData.cinemaId;
       const [cinemaHall] = sessionData.cinemaHall;
       for (let i = 0; i < selectedPlace.length; i++) {
@@ -140,8 +163,6 @@ export const CheckoutPage = () => {
       addNewOrder(title, city);
       setSelectedFood([]);
       setSelectedPlace([]);
-    } else {
-      setUserExist(false);
     }
   };
   const userAlertClose = () => {
@@ -173,15 +194,13 @@ export const CheckoutPage = () => {
           The order has not been placed, please try again
         </Alert>
       </Snackbar>
-      <Box sx={{
-        width: '80%', display: 'flex', justifyContent: 'flex-start', mb: 3,
-      }}
+      <Box
+        className={classes.checkoutTitle}
       >
         <Typography variant="customTitleH2">Checkout</Typography>
       </Box>
-      <Box sx={{
-        width: '80%', backgroundColor: 'common.white', boxShadow: '1', borderRadius: '8px',
-      }}
+      <Box
+        className={classes.checkoutContainer}
       >
         <Box sx={{
           width: '100%', display: 'flex', height: '108px', borderRadius: '8px 8px 0 0', backgroundColor: 'background.darkBlue',
@@ -236,35 +255,45 @@ export const CheckoutPage = () => {
               : <Skeleton width={90} sx={{ backgroundColor: 'grey.400' }} />}
           </Box>
         </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Box sx={{ width: '15%' }}>
+        <Box className={classes.checkoutContent}>
+          <Box className={classes.foodContainer}>
             <Box sx={{
               mb: 2, mt: 4, display: 'flex', justifyContent: 'center',
             }}
             >
               <Typography variant="cardTitle">Food</Typography>
             </Box>
-            <Box sx={{
-              display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: 'auto', gap: '16px', placeItems: 'center',
-            }}
-            >
-              {sessionData && sessionData.food.map((card) => (
-                <FoodCard
-                  img={card.img}
-                  title={card.title}
-                  price={card.price}
-                  key={card.title}
-                  handleAddFood={handleAddFood}
-                  handleRemoveFood={handleRemoveFood}
-                  foodState={foodState.food}
-                />
-              ))}
-            </Box>
+            {!foodLoading
+              ? (
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gridTemplateRows: 'auto',
+                    gap: '16px',
+                    placeItems: 'center',
+                  }}
+                >
+                  {sessionData && sessionData.food.map((card) => (
+                    <FoodCard
+                      img={card.img}
+                      title={card.title}
+                      price={card.price}
+                      key={card.title}
+                      handleAddFood={handleAddFood}
+                      handleRemoveFood={handleRemoveFood}
+                      foodState={foodState.food}
+                    />
+                  ))}
+                </Box>
+              )
+              : (
+                <Box className={classes.loaderContainer}>
+                  <CircularProgress width={60} height={60} color="secondary" />
+                </Box>
+              )}
           </Box>
-          <Box sx={{
-            width: '50%', ml: 3,
-          }}
-          >
+          <Box className={classes.cinemaContainer}>
             <Box sx={{
               mb: 2, mt: 4, display: 'flex', justifyContent: 'center',
             }}
@@ -272,11 +301,18 @@ export const CheckoutPage = () => {
               <Typography variant="cardTitle">Hall plan</Typography>
             </Box>
             <Box sx={{
-              borderColor: 'grey.300', borderWidth: '0 1px 0 1px', borderStyle: 'solid', my: 3, width: '100%', maxWidth: '750px',
+              borderColor: 'grey.300',
+              borderWidth: '0 1px 0 1px',
+              borderStyle: 'solid',
+              my: 3,
+              width: '100%',
+              maxWidth: { xs: '100%', md: '750px' },
+              overflow: 'scroll',
+              overflowX: 'auto',
             }}
             >
               {
-              sessionData && sessionData.cinemaHall.map((hall) => (
+              !hallPlanLoading ? sessionData && sessionData.cinemaHall.map((hall) => (
                 hall.cinemaHall.map((columns, rowInd) => (
                   <Box
                     key={rowInd}
@@ -284,24 +320,35 @@ export const CheckoutPage = () => {
                       display: 'flex', alignItems: 'center', mx: 2,
                     }}
                   >
-                    <Typography variant="body3" sx={{ ml: 2 }}>{rowInd}</Typography>
+                    <Typography variant="body3" sx={{ ml: 2, mr: { xs: 3, sm: 0 } }}>{rowInd}</Typography>
                     <CinemaHall columns={columns} rowIndex={rowInd} handlePlaceClick={handlePlaceClick} />
                     <Typography variant="body3" sx={{ mr: 2 }}>{rowInd}</Typography>
                   </Box>
                 ))
               ))
+                : (
+                  <Box className={classes.loaderContainer}>
+                    <CircularProgress width={60} height={60} />
+                  </Box>
+                )
             }
               <InfoByPlace />
             </Box>
           </Box>
-          <Box sx={{ width: '25%', maxWidth: '320px' }}>
+          <Box className={classes.selectContainer}>
             <Box sx={{
               mb: 2, mt: 4, display: 'flex', justifyContent: 'center',
             }}
             >
               <Typography variant="cardTitle">Selected</Typography>
             </Box>
-            <SelectedCinemaPlace places={selectedPlace} food={selectedFood} selectedSum={selectedSum} handlePay={handlePay} />
+            <SelectedCinemaPlace
+              places={selectedPlace}
+              food={selectedFood}
+              selectedSum={selectedSum}
+              handlePay={handlePay}
+              loader={createOrderLoading}
+            />
           </Box>
         </Box>
       </Box>

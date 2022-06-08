@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import {
-  Button, TextField, Alert, Snackbar,
+  TextField, Alert, Snackbar,
 } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -26,13 +27,17 @@ export const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isError, setIsError] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
   const authUser = async (formValue) => {
     try {
       const { email, password } = formValue;
+      setLoginLoading(true);
       await dispatch(loginUser(email, password));
+      setLoginLoading(false);
       navigate('/');
     } catch (e) {
       setIsError(true);
+      setLoginLoading(false);
     }
   };
   const handleClose = () => {
@@ -89,7 +94,15 @@ export const LoginPage = () => {
                 error={formik.touched.password && Boolean(formik.errors.password)}
                 helperText={formik.touched.password && formik.errors.password}
               />
-              <Button variant="contained" sx={{ backgroundColor: 'button.purple', mt: '10%' }} className={classes.formButtom} type="submit">Log In</Button>
+              <LoadingButton
+                variant="contained"
+                sx={{ backgroundColor: 'button.purple', mt: '10%' }}
+                className={classes.formButtom}
+                type="submit"
+                loading={loginLoading}
+              >
+                Log In
+              </LoadingButton>
             </form>
             <div className={classes.signUpContainer}>
               <span>Don’t have an account?</span>

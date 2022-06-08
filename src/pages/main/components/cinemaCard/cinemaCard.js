@@ -13,7 +13,7 @@ export const CinemaCard = ({
   const isExist = sessions.map((session) => moment(session.date).format() === moment(date).format());
   return (
     <Box sx={{
-      boxShadow: 'none', display: 'flex', justifyContent: 'space-between',
+      boxShadow: 'none', display: 'flex', justifyContent: 'space-between', flexDirection: { xs: 'column', sm: 'column', md: 'row' },
     }}
     >
       {
@@ -47,14 +47,17 @@ export const CinemaCard = ({
             <Box
               key={session.time}
               sx={{
-                mt: 3, ml: 1, display: 'flex', justifyContent: 'space-between',
+                mt: 3, ml: { xs: 3, sm: 3, md: 1 }, display: 'flex', justifyContent: 'space-between',
               }}
             >
-              <Box sx={{ cursor: 'pointer' }}>
+              <Box sx={{ cursor: 'pointer', ml: { md: 5 } }}>
                 <Typography onClick={() => handleFilmClick(session.filmId)} sx={{ font: '500 20px/24px Lato', '&:hover': { color: 'button.purple' } }}>{session.filmName}</Typography>
                 <Typography variant="body2" color="text.secondary">{`${session.filmGenres.join(',  ')}`}</Typography>
               </Box>
-              <Box sx={{ maxWidth: '320px', width: '100%', display: 'flex' }}>
+              <Box sx={{
+                maxWidth: '320px', width: '100%', display: 'flex', justifyContent: { xs: 'flex-end', sm: 'center', md: 'flex-start' },
+              }}
+              >
                 {
                 session.time && session.time.map((filmTime) => (
                   <Box

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  TextField, Link, Select, Box, Typography, FormControl, MenuItem,
+  TextField, Link, Select, Box, Typography, FormControl, MenuItem, CircularProgress,
 } from '@mui/material';
 import { LocalizationProvider, DatePicker } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -48,18 +48,28 @@ const settings = {
       },
     },
     {
-      breakpoint: 1024,
+      breakpoint: 900,
       settings: {
         slidesToShow: 2,
         slidesToScroll: 1,
         dots: false,
+        initialSlide: 2,
       },
     },
     {
-      breakpoint: 720,
+      breakpoint: 620,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 1,
+        dots: false,
+        arrow: false,
+      },
+    },
+    {
+      breakpoint: 400,
       settings: {
         slidesToShow: 1,
-        slidesToScroll: 1,
+        slidesToScroll: 2,
         dots: false,
         arrow: false,
         centerMode: true,
@@ -74,6 +84,8 @@ export const MainPage = () => {
   const [errorFilm, setErrorFilm] = useState(false);
   const [errorCinema, setErrorCinema] = useState(false);
   const [errorFilter, setErrorFilter] = useState(false);
+  const [sliderLoading, setSliderLoading] = useState(false);
+  const [cinemaLoading, setCinemaLoading] = useState(false);
   const [filterOptions, setFilterOptions] = useQueryParams({
     theatre: withDefault(StringParam, ''),
     city: withDefault(StringParam, ''),
@@ -104,7 +116,9 @@ export const MainPage = () => {
 
   async function getFilms() {
     try {
+      setSliderLoading(true);
       await dispatch(getPopularFilms());
+      setSliderLoading(false);
     } catch (e) {
       setErrorFilm(true);
     }
@@ -112,7 +126,9 @@ export const MainPage = () => {
   async function getFilterCinemas() {
     try {
       const { theatre, city, date } = filterOptions;
+      setCinemaLoading(true);
       await dispatch(getCinemasByFilter(theatre, city, date));
+      setCinemaLoading(false);
     } catch (e) {
       setErrorCinema(true);
     }
@@ -174,7 +190,7 @@ export const MainPage = () => {
             fantasy
           </Link>
         </nav>
-        <div style={{ width: '65%' }}>
+        <div className={classes.widthContainer}>
           <div className={classes.selectContainer}>
             <div className={classes.filterBox}>
               <h3>City</h3>
@@ -208,7 +224,7 @@ export const MainPage = () => {
               </FormControl>
             </div>
             <div className={classes.filterBox}>
-              <h3>Date and time</h3>
+              <h3 className={classes.timePickerTitle}>Date</h3>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
                   className={classes.selectInput}
@@ -226,10 +242,12 @@ export const MainPage = () => {
         </div>
       </section>
       <section className={classes.sliderSection}>
-        <main style={{ width: '65%' }}>
+        <main className={classes.widthContainer}>
           <h2>Popular</h2>
-          <Slider {...settings}>
-            {
+          {!sliderLoading
+            ? (
+              <Slider {...settings}>
+                {
               !errorFilm && filmsArr.map((film) => (
                 <FilmCard
                   handleFilmClick={handleFilmClick}
@@ -240,19 +258,27 @@ export const MainPage = () => {
                 />
               ))
             }
-          </Slider>
+              </Slider>
+            )
+            : (
+              <Box className={classes.loaderContainer}>
+                <CircularProgress width={60} height={60} />
+              </Box>
+            )}
         </main>
       </section>
       <section className={classes.cinemaSection}>
         <div className={classes.movieTitleContainer}>
           <h1 className={classes.mainTitle}>Cinemas</h1>
         </div>
-        <Box sx={{
-          width: '65%', borderRadius: '10px', backgroundColor: 'common.white', boxShadow: '1',
-        }}
+        <Box
+          sx={{
+            width: '65%', borderRadius: '10px', backgroundColor: 'common.white', boxShadow: '1',
+          }}
+          className={classes.widthContainer}
         >
-          {
-            dateArr && dateArr.date.map((date) => (
+          { !cinemaLoading
+            ? dateArr && dateArr.date.map((date) => (
               <div className={classes.cinemaContainer} key={date}>
                 <Box sx={{
                   width: '100%', height: '50px', backgroundColor: 'grey.300', alignItems: 'center', display: 'flex', borderRadius: '10px 10px 0 0',
@@ -275,7 +301,11 @@ export const MainPage = () => {
                 }
               </div>
             ))
-          }
+            : (
+              <Box className={classes.loaderContainer}>
+                <CircularProgress width={60} height={60} color="secondary" />
+              </Box>
+            )}
         </Box>
       </section>
     </div>

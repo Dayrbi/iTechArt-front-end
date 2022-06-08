@@ -22,6 +22,13 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'space-around',
     alignItems: 'center',
+    [theme.breakpoints.down('md')]: {
+      width: '80%',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '30%',
+      minWidth: '140px',
+    },
   },
   searchInput: {
     width: '50%',
@@ -29,6 +36,9 @@ export const useStyles = makeStyles((theme) => ({
     borderRadius: '8px',
     marginRight: theme.spacing(3),
     color: theme.palette.common.white,
+    [theme.breakpoints.down('sm')]: {
+      display: 'none',
+    },
   },
   searchTitle: {
     fontFamily: 'Lato',
@@ -42,6 +52,40 @@ export const useStyles = makeStyles((theme) => ({
     height: '60%',
     display: 'flex',
     alignItems: 'center',
+    [theme.breakpoints.down('md')]: {
+      width: '15%',
+      justifyContent: 'center',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '25%',
+      minWidth: '150px',
+      justifyContent: 'center',
+    },
+  },
+  searchIconBut: {
+    display: 'none',
+    width: '40px',
+    color: theme.palette.common.white,
+    [theme.breakpoints.down('sm')]: {
+      display: 'block',
+    },
+  },
+  responsiveSearchContainer: {
+    position: 'absolute',
+    display: 'flex',
+    justifyContent: 'space-around',
+    zIndex: theme.zIndex.modal,
+    top: '80px',
+    backgroundColor: theme.palette.background.header,
+    width: '100%',
+    transition: 'height 1s',
+    overflow: 'hidden',
+  },
+  responsiveSearch: {
+    backgroundColor: theme.palette.common.white,
+    borderRadius: '8px',
+    marginTop: theme.spacing(3),
+    width: '100%',
   },
   logButton: {
     marginRight: theme.spacing(3),

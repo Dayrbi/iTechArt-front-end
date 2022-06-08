@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Button, TextField, Alert, Snackbar,
+  TextField, Alert, Snackbar,
 } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
@@ -34,15 +35,19 @@ const validationSchema = yup.object({
 export default function RegistrationPage() {
   const classes = useStyles();
   const [isNotReg, setIsNotReg] = useState(false);
+  const [signUpLoading, setSignUpLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const createUser = async (data) => {
     try {
       const { username, email, password } = data;
+      setSignUpLoading(true);
       await dispatch(registerUser(username, email, password));
       navigate('/');
+      setSignUpLoading(false);
     } catch (e) {
       setIsNotReg(true);
+      setSignUpLoading(false);
     }
   };
   const handleClose = () => {
@@ -122,14 +127,15 @@ export default function RegistrationPage() {
                 error={formik.touched.passwordConfirm && Boolean(formik.errors.passwordConfirm)}
                 helperText={formik.touched.passwordConfirm && formik.errors.passwordConfirm}
               />
-              <Button
+              <LoadingButton
+                loading={signUpLoading}
                 variant="contained"
                 sx={{ backgroundColor: 'button.purple', mt: '10%' }}
                 className={classes.formButtom}
                 type="submit"
               >
                 Sign Up
-              </Button>
+              </LoadingButton>
             </form>
             <div className={classes.signUpContainer}>
               <span>Already have an account?</span>

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import {
+  Box, CircularProgress, Skeleton, Typography,
+} from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserOrder } from 'redux/actions/user';
 import { useParams } from 'react-router-dom';
@@ -16,18 +18,23 @@ export const OrderPage = () => {
   const orderInfo = useSelector((state) => state.ordersReducer.order);
   const [orderError, setOrderError] = useState(false);
   const [orderInfoError, setOrderInfoError] = useState(false);
+  const [selectedOrder, selectOrder] = useState(null);
+  const [ordersListLoading, setOrderListLoading] = useState(false);
   useEffect(() => {
     getOrders();
   }, []);
   async function getOrders() {
     try {
+      setOrderListLoading(true);
       await dispatch(getUserOrder(id));
+      setOrderListLoading(false);
     } catch (e) {
       setOrderError(true);
     }
   }
   const handleOrderClick = async (id, filmId) => {
     try {
+      selectOrder(id);
       await dispatch(getOneOrder(id, filmId));
     } catch (e) {
       setOrderInfoError(true);
@@ -35,27 +42,28 @@ export const OrderPage = () => {
   };
   return (
     <section className={classes.orderContainer}>
-      <Box sx={{
-        width: '65%', display: 'flex', justifyContent: 'flex-start', mb: 3,
-      }}
-      >
+      <Box className={classes.orederTitle}>
         <Typography variant="customTitleH2">My Account</Typography>
       </Box>
-      <Box sx={{
-        width: '65%', backgroundColor: 'common.white', boxShadow: '1', borderRadius: '8px', display: 'flex', justifyContent: 'space-between',
-      }}
-      >
-        <Box sx={{
-          display: 'flex', flexDirection: 'column', mb: 3, ml: 3, mt: 3,
-        }}
-        >
-          <Box sx={{ display: 'flex', flexDirection: 'column', mb: 6 }}>
-            <Typography variant="cardTitle" sx={{ fontWeight: 500 }}>{`Hello, ${userOrdersArr ? userOrdersArr.username : 'invalid User'}`}</Typography>
-            <Typography variant="body2" color="text.secondary">{userOrdersArr ? userOrdersArr.email : 'invalid email'}</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box className={classes.orderContent}>
+        <Box className={classes.orderListContainer}>
+          {userOrdersArr.username ? (
+            <Box sx={{ display: 'flex', flexDirection: 'column', mb: 6 }}>
+              <Typography variant="cardTitle" sx={{ fontWeight: 500 }}>{`Hello, ${userOrdersArr ? userOrdersArr.username : 'invalid User'}`}</Typography>
+              <Typography variant="body2" color="text.secondary">{userOrdersArr ? userOrdersArr.email : 'invalid email'}</Typography>
+            </Box>
+          ) : (
+            <Box sx={{ display: 'flex', flexDirection: 'column', mb: 6 }}>
+              <Skeleton sx={{ mt: 2 }} width={150} />
+              <Skeleton sx={{ mt: 2 }} width={150} />
+            </Box>
+          )}
+          <Box sx={{
+            display: 'flex', flexDirection: 'column', overflowY: 'scroll', overflowX: 'hidden',
+          }}
+          >
             <Typography variant="bodyLato3" sx={{ mb: 2 }}>My orders history</Typography>
-            {userOrdersArr && !orderError ? userOrdersArr.orders && userOrdersArr.orders.map((order) => (
+            {!ordersListLoading ? !orderError && userOrdersArr.orders && userOrdersArr.orders.map((order) => (
               <OrderList
                 title={order.filmTitle}
                 cinemaName={order.cinemaName}
@@ -67,19 +75,17 @@ export const OrderPage = () => {
                 id={order._id}
                 key={order._id}
                 filmId={order.filmId}
+                active={selectedOrder === order._id}
                 handleOrderClick={handleOrderClick}
               />
             )) : (
-              <Box sx={{ width: '500px', height: '300px' }}>
-                <Typography variant="cardTitle" color="text.secondary">You dont have orders</Typography>
+              <Box className={classes.loaderContainer} sx={{ minWidth: 300 }}>
+                <CircularProgress width={60} height={60} />
               </Box>
             )}
           </Box>
         </Box>
-        <Box sx={{
-          display: 'flex', flexDirection: 'column', mb: 3, mr: 3,
-        }}
-        >
+        <Box className={classes.selectOrderContainer}>
           <Box sx={{ mb: 3, mt: 3 }}>
             <Typography variant="cardTitle" sx={{ fontWeight: 500 }}>Selected Order</Typography>
           </Box>

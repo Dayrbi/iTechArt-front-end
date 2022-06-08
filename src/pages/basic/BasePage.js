@@ -1,13 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  Autocomplete, TextField, Button, Avatar, Typography,
+  Autocomplete, TextField, Button, Avatar, Typography, Menu, MenuItem, ListItemIcon, Tooltip, IconButton, Box,
 } from '@mui/material';
 import debounce from 'lodash.debounce';
+import Cookies from 'js-cookie';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useQueryParams, withDefault, StringParam } from 'use-query-params';
 import { authUser } from 'redux/actions/user';
 import { getFilmsForSearch } from 'redux/actions/films';
+import {
+  Close, Logout, Person, Search,
+} from '@mui/icons-material';
 import { useStyles } from './baseStyle';
 import { SearchItem } from './components/searchItem/searchItem';
 
@@ -20,6 +24,9 @@ export const BasePage = () => {
   const [isUser, setIsUser] = useState(false);
   const [filmName, setFilmName] = useQueryParams({ search: withDefault(StringParam, '') });
   const [errorFilm, setErrorFilm] = useState(false);
+  const [anchorEl, isMenuOpen] = useState(null);
+  const [openSearch, isSearchOpen] = useState(false);
+  const menuOpen = Boolean(anchorEl);
   useEffect(() => {
     getUserData();
     debouncedChangeHandler.cancel();
@@ -58,6 +65,25 @@ export const BasePage = () => {
       navigate(`/filmDescription/${id}`);
     }
   };
+  const handleMenuClose = () => {
+    isMenuOpen(null);
+  };
+  const handleMenuClick = (event) => {
+    isMenuOpen(event.currentTarget);
+  };
+  const handleAccountClick = () => {
+    navigate(`/my/${userData.id}`);
+  };
+  const handleLogoutClick = () => {
+    Cookies.remove('token');
+    navigate('/login');
+  };
+  const handleSearchOpen = () => {
+    isSearchOpen(true);
+  };
+  const handleSearchClose = () => {
+    isSearchOpen(false);
+  };
   return (
     <div className={classes.mainContainer}>
       <header className={classes.appBar}>
@@ -91,15 +117,105 @@ export const BasePage = () => {
             renderInput={(params) => <TextField {...params} placeholder="Search..." />}
           />
         </div>
+        <Box className={classes.responsiveSearchContainer} sx={{ height: openSearch ? '180px' : 0 }}>
+          <Box sx={{ width: '70%' }}>
+            <Autocomplete
+              className={classes.responsiveSearch}
+              freeSolo
+              value={filmName.search}
+              loading={!!filmSearchData}
+              loadingText={errorFilm ? 'Nothing found for your request' : 'Loading...'}
+              onInputChange={debouncedChangeHandler}
+              options={filmSearchData}
+              getOptionLabel={(option) => {
+                if (typeof option === 'string') {
+                  return option;
+                }
+                if (option.inputValue) {
+                  return option.inputValue;
+                }
+                return option.title;
+              }}
+              renderOption={(props, option) => (
+                <SearchItem
+                  {...props}
+                  option={option}
+                  key={option.id}
+                  handleClick={() => handleClick(option.id)}
+                />
+              )}
+              renderInput={(params) => <TextField {...params} placeholder="Search..." />}
+            />
+          </Box>
+          <IconButton onClick={handleSearchClose} sx={{ color: 'common.white', height: 100 }}>
+            <Close />
+          </IconButton>
+        </Box>
         {isUser ? (
           <div className={classes.butContainer}>
-            <Typography sx={{ mr: 3 }} color="common.white" variant="body2">{userData.username}</Typography>
-            <Avatar src="/broken-image.jpg" />
+            <IconButton onClick={handleSearchOpen} className={classes.searchIconBut}>
+              <Search />
+            </IconButton>
+            <Typography sx={{ mr: 2, display: { xs: 'none', sm: 'none', md: 'flex' } }} color="common.white" variant="body2">{userData.username}</Typography>
+            <Tooltip title="Account settings">
+              <IconButton
+                onClick={handleMenuClick}
+                size="small"
+                sx={{ ml: 2 }}
+                aria-controls={menuOpen ? 'account-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={menuOpen ? 'true' : undefined}
+              >
+                <Avatar src="/broken-image.jpg" />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              open={menuOpen}
+              onClose={handleMenuClose}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button',
+              }}
+            >
+              <MenuItem onClick={handleAccountClick}>
+                <ListItemIcon>
+                  <Person fontSize="small" />
+                </ListItemIcon>
+                My account
+              </MenuItem>
+              <MenuItem onClick={handleLogoutClick}>
+                <ListItemIcon>
+                  <Logout fontSize="small" />
+                </ListItemIcon>
+                Logout
+              </MenuItem>
+            </Menu>
           </div>
         ) : (
           <div className={classes.butContainer}>
-            <Button className={classes.logButton} variant="text" onClick={() => navigate('/login')}>Log In</Button>
-            <Button className={classes.signButton} variant="contained" onClick={() => navigate('/registration')}>Sign Up</Button>
+            <IconButton onClick={handleSearchOpen} className={classes.searchIconBut}>
+              <Search />
+            </IconButton>
+            <Button
+              className={classes.logButton}
+              variant="text"
+              onClick={() => navigate('/login')}
+            >
+              Log In
+            </Button>
+            <Button
+              className={classes.signButton}
+              variant="contained"
+              onClick={() => navigate('/registration')}
+              sx={{ display: { xs: 'none', sm: 'none', md: 'flex' } }}
+            >
+              Sign Up
+            </Button>
           </div>
         )}
       </header>
